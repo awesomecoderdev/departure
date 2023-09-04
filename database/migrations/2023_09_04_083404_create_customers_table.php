@@ -15,10 +15,17 @@ return new class extends Migration
             $table->id();
             $table->string("first_name");
             $table->string("last_name")->nullable();
+            $table->string("username")->unique();
             $table->string("email")->unique();
             $table->string("password");
             $table->string("phone", 15)->unique();
             $table->string("image")->nullable();
+            $table->text("metadata")->nullable();
+            $table->enum("provider", ["facebook", "google"])->default("credential");
+            $table->string("provider_id")->nullable();
+            $table->string("access_token")->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string("firebase_token")->nullable();
             $table->boolean("status")->default(true);
             $table->timestamps();
         });

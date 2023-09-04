@@ -2,19 +2,16 @@
 
 namespace App\Http\Requests\Api\V1;
 
-use App\Traits\ApiErrorResponse;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCustomerRequest extends FormRequest
+class UpdateReviewRequest extends FormRequest
 {
-    use ApiErrorResponse;
-
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -25,12 +22,7 @@ class StoreCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => "required",
-            'last_name' => "required",
-            'phone' => "required|unique:customers,phone",
-            'email' => "required|email|unique:customers,email",
-            'password' => "required|min:3|max:10",
-            'status' => "nullable|boolean",
+            //
         ];
     }
 }

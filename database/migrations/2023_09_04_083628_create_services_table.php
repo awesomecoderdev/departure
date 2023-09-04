@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->integer("guide_id")->default(0);
+            $table->integer("agency_id")->default(0);
+            $table->integer("category_id")->default(0);
+            $table->string("name")->nullable();
+            $table->text("short_description")->nullable();
+            $table->text("long_description")->nullable();
+            $table->string("address")->nullable();
+            $table->text("thumbnail")->nullable();
+            $table->string("image")->nullable();
+            $table->text("metadata")->nullable();
             $table->timestamps();
         });
     }

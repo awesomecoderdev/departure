@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
-use App\Models\Agency;
 use App\Models\Customer;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -142,7 +141,7 @@ class CustomerController extends Controller
             // If the customer is not registered, proceed with registration
             $phone = $request->phone;
             $ttl = 1; // 1 min lock for otp
-            $customer = Agency::create([
+            $customer = Customer::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'phone' => $request->phone,
