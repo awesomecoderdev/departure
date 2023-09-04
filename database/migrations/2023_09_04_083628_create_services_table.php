@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->string("name")->nullable();
+            $table->integer("price")->default(0);
             $table->integer("guide_id")->default(0);
             $table->integer("agency_id")->default(0);
             $table->integer("category_id")->default(0);
-            $table->string("name")->nullable();
             $table->text("short_description")->nullable();
             $table->text("long_description")->nullable();
             $table->string("address")->nullable();
