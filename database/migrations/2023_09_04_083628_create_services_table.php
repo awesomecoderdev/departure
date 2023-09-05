@@ -21,9 +21,11 @@ return new class extends Migration
             $table->text("short_description")->nullable();
             $table->text("long_description")->nullable();
             $table->string("address")->nullable();
+            $table->integer("discount")->nullable();
             $table->text("thumbnail")->nullable();
             $table->string("image")->nullable();
             $table->text("metadata")->nullable();
+            $table->integer("booking_count")->default(0);
             $table->timestamps();
         });
     }

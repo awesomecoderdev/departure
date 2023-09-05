@@ -28,6 +28,8 @@ return new class extends Migration
             $table->text("thumbnail")->nullable();
             $table->string("image")->nullable();
             $table->text("metadata")->nullable();
+            $table->string("firebase_token")->nullable();
+            $table->boolean("status")->default(true);
             $table->timestamps();
         });
     }
