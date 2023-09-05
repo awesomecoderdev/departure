@@ -25,11 +25,6 @@ class CustomerController extends Controller
      */
     public function customer(Request $request)
     {
-        return Response::json([
-            'success'   => false,
-            'status'    => HTTP::HTTP_FORBIDDEN,
-            'message'   => "Something went wrong.",
-        ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         try {
             $customer = $request->user('customer');
             // $customer->load(["address", "bookings"]);
@@ -38,7 +33,7 @@ class CustomerController extends Controller
                 'status'    => HTTP::HTTP_OK,
                 'message'   => "Successfully authorized.",
                 'data'      => [
-                    // "customer" => new CustomerResource($customer)
+                    "customer" => new CustomerResource($customer)
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
