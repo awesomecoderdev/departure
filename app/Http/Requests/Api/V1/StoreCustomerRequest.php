@@ -27,10 +27,12 @@ class StoreCustomerRequest extends FormRequest
         return [
             'first_name' => "required",
             'last_name' => "required",
+            "username" => "required|unique:customers,username",
             'phone' => "required|unique:customers,phone",
             'email' => "required|email|unique:customers,email",
             'password' => "required|min:3|max:10",
-            'status' => "nullable|boolean",
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            // 'status' => "nullable|boolean",
         ];
     }
 }

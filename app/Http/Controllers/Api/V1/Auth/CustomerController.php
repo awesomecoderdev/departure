@@ -138,17 +138,18 @@ class CustomerController extends Controller
     public function register(StoreCustomerRequest $request)
     {
         try {
+            // return $request->all();
             // If the customer is not registered, proceed with registration
             $phone = $request->phone;
             $ttl = 1; // 1 min lock for otp
-            $customer = Customer::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'status' => $request->input("status", false),
-            ]);
+            $customer = new Customer();
+            $customer->first_name = $request->first_name;
+            $customer->last_name = $request->last_name;
+            $customer->username = $request->username;
+            $customer->phone = $request->phone;
+            $customer->email = $request->email;
+            $customer->password = Hash::make($request->password);
+            $customer->save();
 
             event(new RegisteredCustomer($customer));
 
