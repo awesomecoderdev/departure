@@ -14,5 +14,5 @@ use App\Http\Controllers\Api\V1\FrontendController;
 |
 */
 
-Route::any('/', [FrontendController::class, "index"])->name("index");
-Route::any('/api', [FrontendController::class, "index"])->name("index");
+Route::get('/', [FrontendController::class, "index"])->name("root");
+Route::get('/api', [FrontendController::class, "index"])->name("api.index");

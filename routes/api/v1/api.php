@@ -23,7 +23,7 @@ Route::any('/', [FrontendController::class, "index"])->name("index");
 Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
     // auth default route
-    Route::any('/', [FrontendController::class, "auth"])->name("auth");
+    Route::get('/', [FrontendController::class, "auth"])->name("auth");
 
     // Customer Routes
     Route::group(['prefix' => 'customer', 'as' => 'customer.', "controller" => CustomerController::class], function () {

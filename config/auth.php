@@ -84,15 +84,15 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
-        'customer' => [
+        'customers' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Customer::class,
         ],
-        'guide' => [
+        'guides' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Student::class,
         ],
-        'agency' => [
+        'agencies' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Student::class,
         ],

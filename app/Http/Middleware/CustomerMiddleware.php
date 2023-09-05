@@ -16,6 +16,15 @@ class CustomerMiddleware
      */
     public function handle(Request $request, Closure $next, $parameter = "true")
     {
+        return Response::json([
+            'success'   => false,
+            'status'    => HTTP::HTTP_OK,
+            'message'   => "You are already logged in.",
+            'data'      => [
+                "customer" => $request->user("customer")
+            ]
+        ], HTTP::HTTP_OK); // HTTP::HTTP_OK
+
         if ($parameter == "true") {
             if (!$request->user("customer")) {
                 return Response::json([
