@@ -36,6 +36,9 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         // authorization route
         Route::middleware(['customer'])->group(function () {
             Route::get('/', 'customer')->name("customer");
+            Route::post('/update', 'update')->name("update");
+            Route::post('/deactivate', 'deactivate')->name("deactivate");
+            Route::post('/logout', 'logout')->name("logout");
         });
     });
 });

@@ -222,7 +222,6 @@ class CustomerController extends Controller
         $credentials = Arr::only($request->all(), [
             'first_name',
             'last_name',
-            'email',
             'image',
         ]);
 
@@ -270,9 +269,9 @@ class CustomerController extends Controller
 
 
     /**
-     * Delete customer from database.
+     * Deactivate customer from database.
      */
-    public function delete(Request $request)
+    public function deactivate(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'password' => 'required|string',
@@ -295,7 +294,9 @@ class CustomerController extends Controller
             if (password_verify($request->password, $customer->password)) {
                 // Delete the account from the database
                 $customer->tokens()->delete();
-                $customer->delete();
+                // $customer->delete();
+                $customer->status = false;
+                $customer->save();
             } else {
                 return Response::json([
                     'success'   => false,
@@ -310,7 +311,7 @@ class CustomerController extends Controller
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_ACCEPTED,
-                'message'   => "Account deleted successfully.",
+                'message'   => "Account deactivate successfully.",
             ],  HTTP::HTTP_ACCEPTED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
