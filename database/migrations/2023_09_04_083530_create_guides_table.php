@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string("city")->nullable();
             $table->string("country")->nullable();
             $table->text("metadata")->nullable();
-            $table->enum("provider", ["facebook", "google"])->default("credential");
+            $table->enum("provider", ["credential", "facebook", "google"])->default("credential");
             $table->string("provider_id")->nullable();
             $table->string("access_token")->nullable();
             $table->timestamp('email_verified_at')->nullable();

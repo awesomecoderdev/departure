@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string("phone", 15)->unique();
             $table->string("image")->nullable();
             $table->text("metadata")->nullable();
-            $table->enum("provider", ["facebook", "google"])->default("credential");
+            $table->enum("provider", ["credential", "facebook", "google"])->default("credential");
             $table->string("provider_id")->nullable();
             $table->string("access_token")->nullable();
             $table->timestamp('email_verified_at')->nullable();
