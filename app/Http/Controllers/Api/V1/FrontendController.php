@@ -17,18 +17,10 @@ class FrontendController extends Controller
     public function index(Request $request)
     {
         try {
-            if ($request->collage) {
-                return Response::json([
-                    "success" => true,
-                    "status" => 200,
-                    "message" => "{$request->collage?->name}, API Version V0.1",
-                ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
-            }
-
             return Response::json([
                 "success" => true,
                 "status" => 200,
-                "message" => "Polytechnic API Version V0.1",
+                "message" => "Departure API Version V0.1",
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;
@@ -49,7 +41,7 @@ class FrontendController extends Controller
         return Response::json([
             "success" => true,
             "status" => 200,
-            "message" => "{$request->collage?->name}, Auth Version V0.1",
+            "message" => "Departure, Auth Version V0.1",
         ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
 
     }
