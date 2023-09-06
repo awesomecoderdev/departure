@@ -30,7 +30,7 @@ class StoreCustomerRequest extends FormRequest
             "username" => "required|string|unique:customers,username",
             'phone' => "required|string|unique:customers,phone",
             'email' => "required|email|unique:customers,email",
-            'password' => "required|min:3|max:10",
+            'password' => "required|string|min:3|max:10",
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             // 'status' => "nullable|boolean",
         ];
