@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\V1\CustomerResource;
 use App\Http\Requests\Api\V1\CustomerLoginRequest;
 use App\Http\Requests\Api\V1\StoreCustomerRequest;
+use App\Http\Requests\Api\V1\UpdateCustomerPasswordRequest;
 use App\Http\Requests\Api\V1\UpdateCustomerRequest;
 
 class CustomerController extends Controller
@@ -270,7 +271,7 @@ class CustomerController extends Controller
     /**
      * Update customer password database.
      */
-    public function password(UpdateCustomerRequest $request)
+    public function password(UpdateCustomerPasswordRequest $request)
     {
         // get customer
         $customer = $request->user('customer');
