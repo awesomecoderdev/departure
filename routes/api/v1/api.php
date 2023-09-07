@@ -37,6 +37,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         Route::middleware(['customer'])->group(function () {
             Route::get('/', 'customer')->name("customer");
             Route::post('/update', 'update')->name("update");
+            Route::post('/update/password', 'password')->name("password");
             Route::post('/deactivate', 'deactivate')->name("deactivate");
             Route::post('/logout', 'logout')->name("logout");
         });

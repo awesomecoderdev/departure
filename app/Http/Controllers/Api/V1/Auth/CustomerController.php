@@ -267,6 +267,46 @@ class CustomerController extends Controller
         }
     }
 
+    /**
+     * Update customer password database.
+     */
+    public function password(UpdateCustomerRequest $request)
+    {
+        // get customer
+        $customer = $request->user('customer');
+
+        try {
+            if (!$customer || !Hash::check($request->password, $customer->password)) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_UNAUTHORIZED,
+                    'message'   => "Unauthenticated credentials.",
+                    'errors' => [
+                        "password" => ['Invalid credentials.']
+                    ]
+                ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
+            }
+
+            // Update the customer data
+            $customer->password = Hash::make($request->input("new_password", $request->password));
+            $customer->save();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Password updated successfully.",
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong. Try after sometimes.",
+                // 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
 
     /**
      * Deactivate customer from database.
