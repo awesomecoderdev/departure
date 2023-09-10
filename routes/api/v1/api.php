@@ -55,7 +55,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         // authorization route
         Route::middleware(['agency'])->group(function () {
             Route::get('/', 'agency')->name("agency");
-            // Route::post('/update', 'update')->name("update");
+            Route::post('/update', 'update')->name("update");
             Route::post('/update/password', 'password')->name("password");
             Route::post('/deactivate', 'deactivate')->name("deactivate");
             Route::post('/logout', 'logout')->name("logout");

@@ -270,10 +270,7 @@ class AgencyController extends Controller
         $agency = $request->user('agency');
 
         $credentials = Arr::only($request->all(), [
-            'first_name',
-            'last_name',
-            'email',
-            'image',
+            'firebase_token',
         ]);
 
         try {
