@@ -22,7 +22,13 @@ class StoreCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'first_name' => "required|string|min:3",
+            'last_name' => "required|string",
+            "username" => "required|string|unique:customers,username",
+            'phone' => "required|string|unique:customers,phone",
+            'email' => "required|email|unique:customers,email",
+            'password' => "required|string|min:3|max:10",
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

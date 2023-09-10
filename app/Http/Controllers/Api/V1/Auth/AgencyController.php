@@ -17,6 +17,7 @@ use App\Http\Resources\Api\V1\AgencyResource;
 use App\Http\Requests\Api\V1\AgencyLoginRequest;
 use App\Http\Requests\Api\V1\StoreAgencyRequest;
 use App\Http\Requests\Api\V1\UpdateAgencyRequest;
+use App\Http\Requests\Api\V1\UpdateAgencyPasswordRequest;
 
 class AgencyController extends Controller
 {
@@ -74,6 +75,46 @@ class AgencyController extends Controller
                 'status'    => HTTP::HTTP_FORBIDDEN,
                 'message'   => "Something went wrong. Try after sometimes.",
                 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+    /**
+     * Update agency password database.
+     */
+    public function password(UpdateAgencyPasswordRequest $request)
+    {
+        // get agency
+        $agency = $request->user('agency');
+
+        try {
+            if (!$agency || !Hash::check($request->password, $agency->password)) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_UNAUTHORIZED,
+                    'message'   => "Unauthenticated credentials.",
+                    'errors' => [
+                        "password" => ['Invalid credentials.']
+                    ]
+                ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
+            }
+
+            // Update the agency data
+            $agency->password = Hash::make($request->input("new_password", $request->password));
+            $agency->save();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Password updated successfully.",
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                // 'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
@@ -141,14 +182,24 @@ class AgencyController extends Controller
             // If the agency is not registered, proceed with registration
             $phone = $request->phone;
             $ttl = 1; // 1 min lock for otp
-            $agency = Agency::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'status' => $request->input("status", false),
-            ]);
+
+            $agency = new Agency();
+            $agency->first_name = $request->first_name;
+            $agency->last_name = $request->last_name;
+            $agency->phone = $request->phone;
+            $agency->email = $request->email;
+            $agency->password = Hash::make($request->password);
+            $agency->city = $request->city;
+            $agency->country = $request->country;
+            $agency->agency_name = $request->agency_name;
+            $agency->agency_phone = $request->agency_phone;
+            $agency->agency_email = $request->agency_email;
+            $agency->save();
+
+            // $agency->thumbnail = $request->thumbnail;
+            // $agency->metadata = $request->// "metadata
+            // $agency->firebase_token = $request->// "firebase_token
+            // $agency->status = $request->// "status
 
             event(new RegisteredAgency($agency));
 
@@ -267,6 +318,61 @@ class AgencyController extends Controller
         }
     }
 
+    /**
+     * Deactivate agency from database.
+     */
+    public function deactivate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'errors' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        // get agency
+        $agency = $request->user('agency');
+
+        try {
+            // Verify the provided password
+            if (password_verify($request->password, $agency->password)) {
+                // Delete the account from the database
+                $agency->tokens()->delete();
+                // $agency->delete();
+                $agency->status = false;
+                $agency->save();
+            } else {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                    'message'   => "Invalid password.",
+                    'errors'     => [
+                        "password" => ['Invalid credentials.']
+                    ],
+                ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+            }
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_ACCEPTED,
+                'message'   => "Account deactivate successfully.",
+            ],  HTTP::HTTP_ACCEPTED); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                // 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
 
     /**
      * Delete agency from database.

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Auth\AgencyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\FrontendController;
@@ -37,6 +38,24 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         Route::middleware(['customer'])->group(function () {
             Route::get('/', 'customer')->name("customer");
             Route::post('/update', 'update')->name("update");
+            Route::post('/update/password', 'password')->name("password");
+            Route::post('/deactivate', 'deactivate')->name("deactivate");
+            Route::post('/logout', 'logout')->name("logout");
+        });
+    });
+
+    // Agency Routes
+    Route::group(['prefix' => 'agency', 'as' => 'agency.', "controller" => AgencyController::class], function () {
+        // guest route
+        Route::middleware(['agency:false'])->group(function () {
+            Route::post('/login', 'login')->name("login");
+            Route::post('/register', 'register')->name("register");
+        });
+
+        // authorization route
+        Route::middleware(['agency'])->group(function () {
+            Route::get('/', 'agency')->name("agency");
+            // Route::post('/update', 'update')->name("update");
             Route::post('/update/password', 'password')->name("password");
             Route::post('/deactivate', 'deactivate')->name("deactivate");
             Route::post('/logout', 'logout')->name("logout");

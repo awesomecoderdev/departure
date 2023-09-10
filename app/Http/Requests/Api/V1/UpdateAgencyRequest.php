@@ -11,7 +11,7 @@ class UpdateAgencyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,21 @@ class UpdateAgencyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'first_name' => "required|string|min:3",
+            'last_name' => "required|string",
+            'phone' => "required|string|unique:agencies,phone",
+            'email' => "required|email|unique:agencies,email",
+            'password' => "required|string|min:3|max:10",
+            "city" => "required|string",
+            "country" => "required|string",
+            "agency_name" => "required|string",
+            "agency_phone" => "required|string|unique:agencies,agency_phone",
+            "agency_email" => "required|email|unique:agencies,agency_email",
+            // "thumbnail" => "required",
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            // "metadata" => "required",
+            // "firebase_token" => "required",
+            // "status" => "required",
         ];
     }
 }
