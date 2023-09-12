@@ -30,6 +30,7 @@ class StoreAgencyRequest extends FormRequest
             'phone' => "required|string|unique:agencies,phone",
             'email' => "required|email|unique:agencies,email",
             'password' => "required|string|min:3|max:10",
+            "address" => "required|string",
             "city" => "required|string",
             "country" => "required|string",
             "agency_name" => "required|string",

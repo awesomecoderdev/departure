@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\Api\V1\Auth\AgencyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Api\V1\FrontendController;
+use App\Http\Controllers\Api\V1\Auth\AgencyController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 
 /*
@@ -61,4 +62,9 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/logout', 'logout')->name("logout");
         });
     });
+});
+
+// Categories routes
+Route::group(["as" => "categories.", "controller" => CategoryController::class], function () {
+    Route::resource('categories', CategoryController::class)->only(['index', 'show']);
 });

@@ -189,6 +189,7 @@ class AgencyController extends Controller
             $agency->phone = $request->phone;
             $agency->email = $request->email;
             $agency->password = Hash::make($request->password);
+            $agency->address = $request->address;
             $agency->city = $request->city;
             $agency->country = $request->country;
             $agency->agency_name = $request->agency_name;
