@@ -184,6 +184,7 @@ class AgencyController extends Controller
             $ttl = 1; // 1 min lock for otp
 
             $agency = new Agency();
+            $agency->category_id = $request->category_id;
             $agency->first_name = $request->first_name;
             $agency->last_name = $request->last_name;
             $agency->phone = $request->phone;

@@ -25,6 +25,7 @@ class StoreAgencyRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'category_id' => 'required|exists:categories,id',
             'first_name' => "required|string|min:3",
             'last_name' => "required|string",
             'phone' => "required|string|unique:agencies,phone",
