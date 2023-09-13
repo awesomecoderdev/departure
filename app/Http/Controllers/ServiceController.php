@@ -304,6 +304,96 @@ class ServiceController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function popular(Request $request)
+    {
+        $category = $request->category_id;
+        $validator = Validator::make($request->all(), [
+            'category_id' => 'nullable|integer|exists:categories,id',
+            'per_page' => 'integer',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'errors' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+            $params = Arr::only($request->input(), ["category_id", "zone_id"]);
+            $services = Service::when($category, function ($query) use ($category) {
+                return $query->where('category_id', $category);
+            })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully authorized.",
+                'data'      => [
+                    'services'  => $services,
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function recommended(Request $request)
+    {
+        $category = $request->category_id;
+        $validator = Validator::make($request->all(), [
+            'category_id' => 'nullable|integer|exists:categories,id',
+            'per_page' => 'integer',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'errors' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+            $params = Arr::only($request->input(), ["category_id", "zone_id"]);
+            $services = Service::when($category, function ($query) use ($category) {
+                return $query->where('category_id', $category);
+            })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully authorized.",
+                'data'      => [
+                    'services'  => $services,
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateServiceRequest $request, Service $service)

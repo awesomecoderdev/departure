@@ -71,6 +71,8 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 Route::resource('service', ServiceController::class)->only(["index"]);
 Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
     Route::get('/details/{service}', 'details')->name("details");
+    Route::get('/popular', 'popular')->name("popular");
+    Route::get('/recommended', 'recommended')->name("recommended");
     // Route::post('/register', 'register')->name("register");
     // Route::post('/update', 'update')->name("update");
     // Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
