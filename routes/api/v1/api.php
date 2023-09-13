@@ -69,12 +69,12 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
 // Services routes
 Route::resource('service', ServiceController::class)->except(["show", "edit", "store"]);
-// Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
-//     Route::post('/register', 'register')->name("register");
-//     Route::get('/details/{service}', 'details')->name("details");
-//     Route::post('/update', 'update')->name("update");
-//     // Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
-// });
+Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
+    Route::get('/details/{service}', 'details')->name("details");
+    // Route::post('/register', 'register')->name("register");
+    // Route::post('/update', 'update')->name("update");
+    // Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
+});
 
 
 // Categories routes
