@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Api\V1\FrontendController;
 use App\Http\Controllers\Api\V1\Auth\AgencyController;
@@ -26,6 +27,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
     // auth default route
     Route::get('/', [FrontendController::class, "auth"])->name("auth");
+
 
     // Customer Routes
     Route::group(['prefix' => 'customer', 'as' => 'customer.', "controller" => CustomerController::class], function () {
@@ -63,6 +65,17 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         });
     });
 });
+
+
+// Services routes
+Route::resource('service', ServiceController::class)->except(["show", "edit", "store"]);
+// Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
+//     Route::post('/register', 'register')->name("register");
+//     Route::get('/details/{service}', 'details')->name("details");
+//     Route::post('/update', 'update')->name("update");
+//     // Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
+// });
+
 
 // Categories routes
 Route::group(["as" => "categories.", "controller" => CategoryController::class], function () {
