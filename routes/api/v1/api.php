@@ -68,7 +68,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
 
 // Services routes
-Route::resource('service', ServiceController::class)->except(["show", "edit", "store"]);
+Route::resource('service', ServiceController::class)->only(["index"]);
 Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
     Route::get('/details/{service}', 'details')->name("details");
     // Route::post('/register', 'register')->name("register");
