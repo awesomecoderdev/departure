@@ -34,10 +34,23 @@ class StoreServiceRequest extends FormRequest
             "long_description" => "required|string",
             "address" => "required|string",
             "discount" => "required|integer",
-            // "thumbnail" => "required",
+            "thumbnail.*" => "nullable|image|mimes:jpeg,png,jpg|max:2048",
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             // "metadata" => "required",
             // "booking_count" => "required|integer",
+        ];
+    }
+
+    /**
+     * Get the validation messages that apply to the request.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'thumbnail.*.mimes' => 'Only jpeg,png, and jpg images are allowed.',
+            'thumbnail.*.max' => 'Sorry! Maximum allowed size for an image is 2MB',
         ];
     }
 }

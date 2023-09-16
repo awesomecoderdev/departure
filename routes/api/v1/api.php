@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AgencyServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
@@ -62,6 +63,13 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/update/password', 'password')->name("password");
             Route::post('/deactivate', 'deactivate')->name("deactivate");
             Route::post('/logout', 'logout')->name("logout");
+
+            // service route
+            Route::resource('service', AgencyServiceController::class)->only(["index"]);
+            Route::get('/details/{service}', [AgencyServiceController::class, 'details'])->name("details");
+            Route::post('/register', [AgencyServiceController::class, 'register'])->name("register");
+            Route::post('/update/{service}', [AgencyServiceController::class, 'update'])->name("update");
+            Route::post('/delete/{service}', [AgencyServiceController::class, 'destroy'])->name("delete");
         });
     });
 });
