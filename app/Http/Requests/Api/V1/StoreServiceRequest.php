@@ -27,8 +27,8 @@ class StoreServiceRequest extends FormRequest
         return [
             "name" => "required|string|min:3",
             "price" => "required|integer",
-            "guide_id" => "nullable|integer",
-            "agency_id" => "required|exists:agencies,id",
+            // "guide_id" => "nullable|integer",
+            // "agency_id" => "required|exists:agencies,id",
             // "category_id" => "required|exists:categories,id",
             "short_description" => "required|string",
             "long_description" => "required|string",
