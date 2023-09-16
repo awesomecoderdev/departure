@@ -63,17 +63,20 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/update/password', 'password')->name("password");
             Route::post('/deactivate', 'deactivate')->name("deactivate");
             Route::post('/logout', 'logout')->name("logout");
-
-            // service route
-            Route::resource('service', AgencyServiceController::class)->only(["index"]);
-            Route::get('/details/{service}', [AgencyServiceController::class, 'details'])->name("details");
-            Route::post('/register', [AgencyServiceController::class, 'register'])->name("register");
-            Route::post('/update/{service}', [AgencyServiceController::class, 'update'])->name("update");
-            Route::post('/delete/{service}', [AgencyServiceController::class, 'destroy'])->name("delete");
         });
     });
 });
 
+
+// authorization route
+Route::group(['prefix' => 'agency/service', 'as' => 'agency.service', 'middleware' => 'agency'], function () {
+    // service route
+    Route::get('/', [AgencyServiceController::class, 'index'])->name("index");
+    Route::get('/details/{service}', [AgencyServiceController::class, 'details'])->name("details");
+    Route::post('/register', [AgencyServiceController::class, 'register'])->name("register");
+    Route::post('/update/{service}', [AgencyServiceController::class, 'update'])->name("update");
+    Route::post('/delete/{service}', [AgencyServiceController::class, 'destroy'])->name("delete");
+});
 
 // Services routes
 Route::resource('service', ServiceController::class)->only(["index"]);
