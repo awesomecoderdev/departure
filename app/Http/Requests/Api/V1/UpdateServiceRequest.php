@@ -33,7 +33,7 @@ class UpdateServiceRequest extends FormRequest
             "short_description" => "required|string",
             "long_description" => "required|string",
             "address" => "required|string",
-            "discount" => "required|integer",
+            // "discount" => "required|integer",
             "thumbnail.*" => "nullable|image|mimes:jpeg,png,jpg|max:2048",
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             // "metadata" => "required",

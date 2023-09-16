@@ -81,7 +81,7 @@ class AgencyServiceController extends Controller
             $service->short_description  = $request->short_description;
             $service->long_description  = $request->long_description;
             $service->address  = $request->address;
-            $service->discount  = $request->discount;
+            $service->discount  = $request->input("discount", 0);
             $service->image  = $request->image;
             // $service->booking_count  = $request->booking_count;
             $service->booking_count  = 0;
@@ -266,7 +266,7 @@ class AgencyServiceController extends Controller
             $service->short_description  = $request->short_description;
             $service->long_description  = $request->long_description;
             $service->address  = $request->address;
-            $service->discount  = $request->discount;
+            $service->discount  = $request->input("discount", 0);
             $service->save();
         } catch (\Throwable $th) {
             //throw $th;
