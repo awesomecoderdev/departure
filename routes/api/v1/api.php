@@ -93,7 +93,7 @@ Route::group(["as" => "service.", 'prefix' => 'service', "controller" => Service
 
     // Facility routes
     Route::post('/facilities/register', [ServiceFacilityController::class, 'register'])->name("facilities.register");
-    Route::post('/facilities/delete/{facility}', [ServiceFacilityController::class, 'delete'])->name("facilities.delete");
+    Route::post('/facilities/delete/{facility}', [ServiceFacilityController::class, 'destroy'])->name("facilities.delete");
 });
 
 
