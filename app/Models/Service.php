@@ -68,7 +68,6 @@ class Service extends Model
         );
     }
 
-
     /**
      * Interact with the thumbnail.
      *

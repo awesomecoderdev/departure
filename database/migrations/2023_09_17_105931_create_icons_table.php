@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('facilities', function (Blueprint $table) {
+        Schema::create('icons', function (Blueprint $table) {
             $table->id();
-            $table->integer("icon_id")->default(0);
-            $table->integer("service_id")->default(0);
-            $table->string("title")->nullable();
-            $table->text("description")->nullable();
-            $table->text("metadata")->nullable();
+            $table->string("url")->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('facilities');
+        Schema::dropIfExists('icons');
     }
 };
