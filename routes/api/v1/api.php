@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\Api\V1\AgencyServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\IconController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Api\V1\FrontendController;
 use App\Http\Controllers\Api\V1\Auth\AgencyController;
+use App\Http\Controllers\Api\V1\AgencyServiceController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
-use App\Http\Controllers\IconController;
+use App\Http\Controllers\Api\V1\ServiceFacilityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +89,11 @@ Route::group(["as" => "service.", 'prefix' => 'service', "controller" => Service
     // Route::post('/register', 'register')->name("register");
     // Route::post('/update', 'update')->name("update");
     // Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
+
+
+    // Facility routes
+    Route::post('/facilities', [ServiceFacilityController::class, 'register'])->name("facilities.register");
+    Route::post('/facilities/delete/{facility}', [ServiceFacilityController::class, 'delete'])->name("facilities.delete");
 });
 
 
