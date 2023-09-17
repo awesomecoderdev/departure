@@ -25,7 +25,7 @@ class ServiceFacilityController extends Controller
 
             $facility = new Facility();
             $facility->title  = $request->title;
-            $facility->agency_id  = $request->agency_id;
+            $facility->agency_id  = $agency->id;
             $facility->service_id  = $request->agency_id;
             $facility->description  = $request->description;
             $facility->save();
