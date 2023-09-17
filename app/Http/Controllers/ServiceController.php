@@ -394,6 +394,58 @@ class ServiceController extends Controller
 
 
     /**
+     * Display the specified resource.
+     */
+    public function search(Request $request)
+    {
+        $category = $request->category_id;
+        $search = $request->input("query", null);
+        $validator = Validator::make($request->all(), [
+            'category_id' => 'nullable|integer|exists:categories,id',
+            'query'       => 'required|string',
+            'per_page' => 'integer',
+        ]);
+
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'errors' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+            $params = Arr::only($request->input(), ["category_id", "query"]);
+            $services = Service::when($category, function ($query) use ($category) {
+                return $query->where('category_id', $category);
+            })->when($search, function ($query) use ($search) {
+                return $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('short_description', 'like', "%{$search}%")
+                    ->orWhere('long_description', 'like', "%{$search}%");
+            })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully authorized.",
+                'data'      => [
+                    'services'  => $services,
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            //throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateServiceRequest $request, Service $service)

@@ -86,6 +86,8 @@ Route::group(["as" => "service.", 'prefix' => 'service', "controller" => Service
     Route::get('/details/{service}', 'details')->name("details");
     Route::get('/popular', 'popular')->name("popular");
     Route::get('/recommended', 'recommended')->name("recommended");
+    Route::get('/search', 'search')->name("search");
+
     // Route::post('/register', 'register')->name("register");
     // Route::post('/update', 'update')->name("update");
     // Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
