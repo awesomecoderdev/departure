@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\Icon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Response as HTTP;
 use App\Http\Requests\StoreIconRequest;
 use App\Http\Requests\UpdateIconRequest;
-use App\Models\Icon;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class IconController extends Controller
 {
@@ -13,7 +18,27 @@ class IconController extends Controller
      */
     public function index()
     {
-        //
+        // Get icons
+        try {
+            $icons = Icon::all();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully Authorized.",
+                'data'      => [
+                    'icons' => $icons
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            // throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                // 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
     }
 
     /**
@@ -37,7 +62,24 @@ class IconController extends Controller
      */
     public function show(Icon $icon)
     {
-        //
+        try {
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully Authorized.",
+                'data'      => [
+                    'icon' => $icon
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            // throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                // 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
     }
 
     /**

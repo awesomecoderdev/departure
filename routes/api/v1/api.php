@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Api\V1\FrontendController;
 use App\Http\Controllers\Api\V1\Auth\AgencyController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
+use App\Http\Controllers\IconController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,4 +94,9 @@ Route::group(["as" => "service.", 'prefix' => 'service', "controller" => Service
 // Categories routes
 Route::group(["as" => "categories.", "controller" => CategoryController::class], function () {
     Route::resource('categories', CategoryController::class)->only(['index', 'show']);
+});
+
+// Icons routes
+Route::group(["as" => "icons.", "controller" => IconController::class], function () {
+    Route::resource('icons', IconController::class)->only(['index', 'show']);
 });
