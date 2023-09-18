@@ -74,10 +74,12 @@ class AgencyServiceController extends Controller
     public function register(StoreServiceRequest $request)
     {
         try {
+            $agency = $request->user("agency");
+            
             $service = new Service();
             $service->name  = $request->name;
             $service->price  = $request->price;
-            $service->agency_id  = $request->agency_id;
+            $service->agency_id  = $agency->id;
             $service->short_description  = $request->short_description;
             $service->long_description  = $request->long_description;
             $service->address  = $request->address;
