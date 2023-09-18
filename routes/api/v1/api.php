@@ -78,6 +78,11 @@ Route::group(['prefix' => 'agency/service', 'as' => 'agency.service', 'middlewar
     Route::post('/register', [AgencyServiceController::class, 'register'])->name("register");
     Route::post('/update/{service}', [AgencyServiceController::class, 'update'])->name("update");
     Route::post('/delete/{service}', [AgencyServiceController::class, 'destroy'])->name("delete");
+
+    
+    // Facility routes
+    Route::post('/facilities/register', [ServiceFacilityController::class, 'register'])->name("facilities.register");
+    Route::post('/facilities/delete/{facility}', [ServiceFacilityController::class, 'destroy'])->name("facilities.delete");
 });
 
 // Services routes
@@ -91,11 +96,6 @@ Route::group(["as" => "service.", 'prefix' => 'service', "controller" => Service
     // Route::post('/register', 'register')->name("register");
     // Route::post('/update', 'update')->name("update");
     // Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
-
-
-    // Facility routes
-    Route::post('/facilities/register', [ServiceFacilityController::class, 'register'])->name("facilities.register");
-    Route::post('/facilities/delete/{facility}', [ServiceFacilityController::class, 'destroy'])->name("facilities.delete");
 });
 
 
