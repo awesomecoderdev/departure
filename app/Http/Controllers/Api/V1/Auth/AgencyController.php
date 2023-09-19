@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response as HTTP;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -219,7 +220,11 @@ class AgencyController extends Controller
                     }
 
                     // Save the image to the specified path
-                    $image->move(public_path('assets/images/agency'), $imageName);
+                    // $image->move(public_path('assets/images/agency'), $imageName);
+
+                    // Save the main image to the specified path, resize it to 200x200 pixels
+                    Image::make($image)->resize(200, 200)->save(public_path($imagePath));
+
                     $agency->image = $imagePath;
                     $agency->save();
                 } catch (\Exception $e) {

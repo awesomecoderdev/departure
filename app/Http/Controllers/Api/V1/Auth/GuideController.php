@@ -10,6 +10,7 @@ use App\Events\RegisteredAgency;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
@@ -168,7 +169,10 @@ class GuideController extends Controller
                     }
 
                     // Save the image to the specified path
-                    $image->move(public_path('assets/images/guide'), $imageName);
+                    // $image->move(public_path('assets/images/guide'), $imageName);
+
+                    Image::make($image)->resize(200, 200)->save(public_path($imagePath));
+
                     $guide->image = $imagePath;
                     $guide->save();
                 } catch (\Exception $e) {

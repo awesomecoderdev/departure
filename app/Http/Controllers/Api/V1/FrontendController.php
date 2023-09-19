@@ -16,6 +16,7 @@ class FrontendController extends Controller
      */
     public function index(Request $request)
     {
+
         try {
             return Response::json([
                 "success" => true,
