@@ -113,7 +113,7 @@ class AgencyServiceController extends Controller
                     $service->image = $imagePath;
                     $service->save();
                 } catch (\Exception $e) {
-                    throw $e;
+                    // throw $e;
                     // skip if not uploaded
                 }
             }
