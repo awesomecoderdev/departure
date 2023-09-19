@@ -130,7 +130,7 @@ class AgencyServiceController extends Controller
 
                 foreach ($request->file('thumbnail') as $key => $image) {
                     $image = $request->file('image');
-                    $imageName = "thumbnail_$service->id_$key.png";
+                    $imageName = "thumbnail_{$service->id}_{$key}.png";
                     $imagePath = "assets/images/service/thumbnails/$service->id/$imageName";
 
                     try {
