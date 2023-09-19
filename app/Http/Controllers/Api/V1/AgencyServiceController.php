@@ -105,10 +105,10 @@ class AgencyServiceController extends Controller
                     }
 
                     // Save the image to the specified path
-                    // $image->move(public_path('assets/images/service'), $imageName);
+                    $image->move(public_path('assets/images/service'), $imageName);
 
                     // Save the main image to the specified path, resize it to 200x200 pixels
-                    Image::make($image)->resize(200, 200)->save(public_path($imagePath));
+                    // Image::make($image)->resize(200, 200)->save(public_path($imagePath));
 
                     $service->image = $imagePath;
                     $service->save();
@@ -127,7 +127,6 @@ class AgencyServiceController extends Controller
                     File::makeDirectory((public_path("assets/images/service/thumbnails/$service->id")), 0777, true, true);
                 }
 
-
                 foreach ($request->file('thumbnail') as $key => $image) {
                     $image = $request->file('image');
                     $imageName = "thumbnail_{$service->id}_{$key}.png";
@@ -136,10 +135,10 @@ class AgencyServiceController extends Controller
                     try {
 
                         // Save the image to the specified path
-                        // $image->move(public_path('assets/images/service'), $imageName);
+                        $image->move(public_path("assets/images/service/thumbnails/$service->id/"), $imageName);
 
                         // Save the main image to the specified path, resize it to 200x200 pixels
-                        Image::make($image)->resize(200, 200)->save(public_path($imagePath));
+                        // Image::make($image)->resize(200, 200)->save(public_path($imagePath));
 
                         $images[] = asset($imagePath);
                     } catch (\Exception $e) {
