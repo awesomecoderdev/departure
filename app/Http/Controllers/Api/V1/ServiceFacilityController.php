@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Api\V1\StoreFacilityRequest;
-
+use App\Models\Service;
 
 class ServiceFacilityController extends Controller
 {
@@ -22,11 +22,12 @@ class ServiceFacilityController extends Controller
     {
         try {
             $agency = $request->user("agency");
+            $service = Service::where("agency_id", $agency->id)->firstOrFail();
 
             $facility = new Facility();
             $facility->title  = $request->title;
             $facility->agency_id  = $agency->id;
-            $facility->service_id  = $request->agency_id;
+            $facility->service_id  = $service->id;
             $facility->description  = $request->description;
             $facility->save();
 
