@@ -75,7 +75,7 @@ class AgencyServiceController extends Controller
     {
         try {
             $agency = $request->user("agency");
-            
+
             $service = new Service();
             $service->name  = $request->name;
             $service->price  = $request->price;
@@ -117,6 +117,7 @@ class AgencyServiceController extends Controller
                     // skip if not uploaded
                 }
             }
+
 
             // Check if there are thumbnail images in the request
             if ($request->hasFile('thumbnail')) {
