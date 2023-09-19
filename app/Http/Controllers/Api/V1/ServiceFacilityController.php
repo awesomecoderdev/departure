@@ -22,7 +22,7 @@ class ServiceFacilityController extends Controller
     {
         try {
             $agency = $request->user("agency");
-            $service = Service::where("agency_id", $agency->id)->firstOrFail();
+            $service = Service::where("agency_id", $agency->id)->where("id", $request->service_id)->firstOrFail();
 
             $facility = new Facility();
             $facility->title  = $request->title;
