@@ -141,7 +141,7 @@ class AgencyServiceController extends Controller
                         // Save the main image to the specified path, resize it to 200x200 pixels
                         Image::make($image)->resize(200, 200)->save(public_path($imagePath));
 
-                        $images[] = $imagePath;
+                        $images[] = asset($imagePath);
                     } catch (\Exception $e) {
                         // throw $e;
                         // skip if not uploaded

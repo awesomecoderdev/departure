@@ -76,7 +76,7 @@ class Service extends Model
     // protected function thumbnail(): Attribute
     // {
     //     return Attribute::make(
-    //         get: fn ($value) => $value != null && file_exists(public_path($value)) ? asset($value) : asset("assets/images/thumbnail/default.png"),
+    //         // get: fn ($value) => $value != null && file_exists(public_path($value)) ? asset($value) : asset("assets/images/thumbnail/default.png"),
     //         // set: fn ($value) => strtolower($value),
     //     );
     // }
