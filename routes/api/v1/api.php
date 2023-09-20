@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\Auth\AgencyController;
 use App\Http\Controllers\Api\V1\AgencyServiceController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\ServiceFacilityController;
+use App\Http\Controllers\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,11 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/update/password', 'password')->name("password");
             Route::post('/deactivate', 'deactivate')->name("deactivate");
             Route::post('/logout', 'logout')->name("logout");
+
+            // wishlist route
+            Route::get('/wishlist', [WishlistController::class, 'index'])->name("wishlist.index");
+            Route::post('/wishlist/register', [WishlistController::class, 'register'])->name("wishlist.register");
+            Route::post('/wishlist/delete', [WishlistController::class, 'destroy'])->name("wishlist.destroy");
         });
     });
 
@@ -69,7 +75,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
     });
 });
 
-
 // authorization route
 Route::group(['prefix' => 'agency/service', 'as' => 'agency.service', 'middleware' => 'agency'], function () {
     // service route
@@ -79,7 +84,7 @@ Route::group(['prefix' => 'agency/service', 'as' => 'agency.service', 'middlewar
     Route::post('/update/{service}', [AgencyServiceController::class, 'update'])->name("update");
     Route::post('/delete/{service}', [AgencyServiceController::class, 'destroy'])->name("delete");
 
-    
+
     // Facility routes
     Route::post('/facilities/register', [ServiceFacilityController::class, 'register'])->name("facilities.register");
     Route::post('/facilities/delete/{facility}', [ServiceFacilityController::class, 'destroy'])->name("facilities.delete");

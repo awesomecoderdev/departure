@@ -2,16 +2,19 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Traits\ApiErrorResponse;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreWishlistRequest extends FormRequest
 {
+    use ApiErrorResponse;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +25,8 @@ class StoreWishlistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "service_id"        => "required|integer|exists:services,id",
+            "category_id"       => "nullable|integer|exists:categories,id",
         ];
     }
 }

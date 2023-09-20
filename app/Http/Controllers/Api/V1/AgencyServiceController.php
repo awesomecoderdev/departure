@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\V1;
 
 use Carbon\Carbon;
-use App\Models\Zone;
 use App\Models\Review;
 use App\Models\Booking;
 use App\Models\Service;
