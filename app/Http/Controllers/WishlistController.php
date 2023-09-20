@@ -121,8 +121,7 @@ class WishlistController extends Controller
 
         try {
             $customer = $request->user("customer");
-            $wishlist = Wishlist::where("customer_id", $customer->id)->where("service_id", $request->service_id)->findOrFail();
-            $wishlist->delete();
+            $wishlist = Wishlist::where("customer_id", $customer->id)->where("service_id", $request->service_id)->delete();
 
             return Response::json([
                 'success'   => true,
