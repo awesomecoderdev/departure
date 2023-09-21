@@ -155,6 +155,9 @@ class AgencyServiceController extends Controller
                 'success'   => true,
                 'status'    => HTTP::HTTP_CREATED,
                 'message'   => "Service successfully registered.",
+                "data"      => [
+                    "service" => $service,
+                ]
             ],  HTTP::HTTP_CREATED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             throw $e;
