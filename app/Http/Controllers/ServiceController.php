@@ -41,7 +41,7 @@ class ServiceController extends Controller
 
         try {
             $params = Arr::only($request->input(), ["category_id", "zone_id"]);
-            $services = Service::when($category, function ($query) use ($category) {
+            $services = Service::with(["facilities"])->when($category, function ($query) use ($category) {
                 return $query->where('category_id', $category);
             })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
             return Response::json([
@@ -98,19 +98,19 @@ class ServiceController extends Controller
             try {
 
                 if ($request->service == "recommended") {
-                    $services = Service::with(["provider", "category", "zone"])->where('zone_id', $request->get('zone_id'))
+                    $services = Service::with(["facilities"])->where('zone_id', $request->get('zone_id'))
                         ->orderBy('avg_rating', 'desc')
                         ->orderBy('created_at', 'desc')  // fallback to newest if ratings are equal
                         ->limit(10)
                         ->get();
                 } elseif ($request->service == "popular") {
-                    $services = Service::with(["provider", "category", "zone"])->where('zone_id', $request->input('zone_id'))
+                    $services = Service::with(["facilities"])->where('zone_id', $request->input('zone_id'))
                         ->where('order_count', '>', 0)  // you might want to adjust this number
                         ->orderBy('order_count', 'desc')
                         ->limit(10)
                         ->get();
                 } else {
-                    $services = Service::where('zone_id', $zone)->with(["provider", "category", "zone"])
+                    $services = Service::where('zone_id', $zone)->with(["facilities"])
                         ->where('name', 'like', "%{$search}%")
                         ->orWhere('short_description', 'like', "%{$search}%")
                         ->orWhere('long_description', 'like', "%{$search}%")

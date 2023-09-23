@@ -4,12 +4,14 @@ namespace App\Models;
 
 
 use DateTimeInterface;
+use App\Models\Facility;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -67,6 +69,15 @@ class Service extends Model
             // set: fn ($value) => strtolower($value),
         );
     }
+
+    /**
+     * Get the facilities for the blog post.
+     */
+    public function facilities(): HasMany
+    {
+        return $this->hasMany(Facility::class);
+    }
+
 
     /**
      * Interact with the thumbnail.
