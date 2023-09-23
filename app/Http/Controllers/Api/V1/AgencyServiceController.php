@@ -281,7 +281,7 @@ class AgencyServiceController extends Controller
     {
         try {
             $agency = $request->user("agency");
-            $service = Service::where("agency_id", $agency->id)->firstOrFail();
+            $service = Service::where("agency_id", $agency->id)->where("id", $request->service)->firstOrFail();
 
             if (!empty($service->image)) {
                 $imagePath = public_path($service->image);
