@@ -4,13 +4,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IconController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Api\V1\FrontendController;
+use App\Http\Controllers\Api\V1\AgencyGuideController;
 use App\Http\Controllers\Api\V1\Auth\AgencyController;
 use App\Http\Controllers\Api\V1\AgencyServiceController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\ServiceFacilityController;
-use App\Http\Controllers\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +32,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
 
     // auth default route
     Route::get('/', [FrontendController::class, "auth"])->name("auth");
-
 
     // Customer Routes
     Route::group(['prefix' => 'customer', 'as' => 'customer.', "controller" => CustomerController::class], function () {
@@ -75,20 +75,34 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
     });
 });
 
-// authorization route
-Route::group(['prefix' => 'agency/service', 'as' => 'agency.service', 'middleware' => 'agency'], function () {
-    // service route
-    Route::get('/', [AgencyServiceController::class, 'index'])->name("index");
-    Route::get('/details/{service}', [AgencyServiceController::class, 'details'])->name("details");
-    Route::post('/register', [AgencyServiceController::class, 'register'])->name("register");
-    Route::post('/update/{service}', [AgencyServiceController::class, 'update'])->name("update");
-    Route::post('/delete/{service}', [AgencyServiceController::class, 'destroy'])->name("delete");
+
+// agency routes
+Route::group(['prefix' => 'agency', 'as' => 'agency.', 'middleware' => "agency"], function () {
+
+    // services route
+    Route::group(['prefix' => 'service', 'as' => 'service'], function () {
+        // service route
+        Route::get('/', [AgencyServiceController::class, 'index'])->name("index");
+        Route::get('/details/{service}', [AgencyServiceController::class, 'details'])->name("details");
+        Route::post('/register', [AgencyServiceController::class, 'register'])->name("register");
+        Route::post('/update/{service}', [AgencyServiceController::class, 'update'])->name("update");
+        Route::post('/delete/{service}', [AgencyServiceController::class, 'destroy'])->name("delete");
 
 
-    // Facility routes
-    Route::post('/facilities/register', [ServiceFacilityController::class, 'register'])->name("facilities.register");
-    Route::post('/facilities/delete/{facility}', [ServiceFacilityController::class, 'destroy'])->name("facilities.delete");
+        // Facility routes
+        Route::post('/facilities/register', [ServiceFacilityController::class, 'register'])->name("facilities.register");
+        Route::post('/facilities/delete/{facility}', [ServiceFacilityController::class, 'destroy'])->name("facilities.delete");
+    });
+
+    // guide route
+    Route::group(['prefix' => 'guide', 'as' => 'guide.', 'middleware' => ["agency"], "controller" => AgencyGuideController::class], function () {
+        Route::get('/', 'guide')->name("guide");
+        Route::post('/register', 'register')->name("register");
+        Route::post('/update/{guide}', 'update')->name("update");
+        Route::post('/delete/{guide}', 'delete')->name("delete");
+    });
 });
+
 
 // Services routes
 Route::resource('service', ServiceController::class)->only(["index"]);

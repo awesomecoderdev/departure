@@ -2,16 +2,19 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Traits\ApiErrorResponse;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateGuideRequest extends FormRequest
 {
+    use ApiErrorResponse;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +24,24 @@ class UpdateGuideRequest extends FormRequest
      */
     public function rules(): array
     {
+        $guide = $this->user("guide");
         return [
-            //
+            // "agency_id"             => "nullable|integer|exists:agencies,id",
+            "first_name"            => "required|string|min:3|max:20",
+            "last_name"             => "required|string|min:3|max:20",
+            "email"                 => "required|email|string|unique:guides,email|$guide->id",
+            "password"              => "required|required|min:5|max:10",
+            "phone"                 => "required|string|unique:guides,phone|$guide->id",
+            'image'                 => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            "city"                  => "required|string",
+            "country"               => "required|string",
+            // "metadata"              => "required",
+            // "provider"              => "nullable|in:credential,facebook,google",
+            "provider_id"           => "nullable|string",
+            "access_token"          => "nullable|string",
+            // "email_verified_at"     => "required",
+            "firebase_token"        => "nullable|string",
+            // "status"                => "required",
         ];
     }
 }

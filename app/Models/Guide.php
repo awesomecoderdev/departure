@@ -37,9 +37,15 @@ class Guide extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'provider',
         'password',
         'created_at',
         'updated_at',
+        'provider_id',
+        'firebase_token',
+        'access_token',
+        'remember_token',
+        'email_verified_at',
     ];
 
     /**
@@ -51,6 +57,7 @@ class Guide extends Authenticatable
         'password' => 'hashed',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'email_verified_at' => 'datetime',
         'metadata' => AsCollection::class,
     ];
 
@@ -62,6 +69,16 @@ class Guide extends Authenticatable
     public function name()
     {
         return ucwords("$this->first_name $this->last_name");
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Agency
+     */
+    public function agency() //: HasMany
+    {
+        return $this->belongsTo(Agency::class);
     }
 
     /**

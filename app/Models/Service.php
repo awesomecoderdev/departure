@@ -71,13 +71,14 @@ class Service extends Model
     }
 
     /**
-     * Get the facilities for the blog post.
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Facility
      */
     public function facilities(): HasMany
     {
         return $this->hasMany(Facility::class);
     }
-
 
     /**
      * Interact with the thumbnail.

@@ -3,12 +3,14 @@
 namespace App\Models;
 
 
+use App\Models\Guide;
 use DateTimeInterface;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -54,6 +56,16 @@ class Agency  extends Authenticatable
         'updated_at' => 'datetime',
         'metadata' => AsCollection::class,
     ];
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Guide
+     */
+    public function guides(): HasMany
+    {
+        return $this->hasMany(Guide::class);
+    }
 
     /**
      * Agency full name.

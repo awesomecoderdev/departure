@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
@@ -46,6 +47,17 @@ class Facility extends Model
         'updated_at' => 'datetime',
         'metadata' => AsCollection::class,
     ];
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Service
+     */
+    public function service() //: HasMany
+    {
+        return $this->belongsTo(Service::class);
+    }
+
 
     /**
      * Interact with the image.
