@@ -130,6 +130,10 @@ class AgencyServiceController extends Controller
                     $imageName = "thumbnail_{$service->id}_{$key}.png";
                     $imagePath = "assets/images/service/thumbnails/{$service->id}/{$imageName}";
 
+                    if ($key > 4) {
+                        break; // skip if images is more then 5
+                    }
+
                     try {
 
                         // Save the image to the specified path
@@ -199,7 +203,7 @@ class AgencyServiceController extends Controller
 
         try {
             $agency = $request->user("agency");
-            $service = Service::where("agency_id", $agency->id)->firstOrFail();
+            $service = Service::where("agency_id", $agency->id)->where("id", $request->service)->firstOrFail();
 
             $service->name  = $request->input("name", $service->name);
             $service->price  = $request->input("price", $service->price);
@@ -244,10 +248,16 @@ class AgencyServiceController extends Controller
                     File::makeDirectory((public_path("assets/images/service/thumbnails/{$service->id}")), 0777, true, true);
                 }
 
-                $images = $service->thumbnail ?? [];
+                $images = $service->thumbnail->toArray() ?? [];
+                $thumbnails = $service?->thumbnail?->count() ?? 0;
                 foreach ($request->file('thumbnail') as $key => $image) {
+                    $key = $key + $thumbnails;
                     $imageName = "thumbnail_{$service->id}_{$key}.png";
                     $imagePath = "assets/images/service/thumbnails/{$service->id}/{$imageName}";
+
+                    if ($key > 4) {
+                        break; // skip if images is more then 5
+                    }
 
                     try {
 
@@ -280,7 +290,7 @@ class AgencyServiceController extends Controller
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable $e) {
             throw $e;
             // return Response::json([
             //     'success'   => false,
