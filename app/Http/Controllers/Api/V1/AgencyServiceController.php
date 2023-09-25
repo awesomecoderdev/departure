@@ -83,7 +83,7 @@ class AgencyServiceController extends Controller
             $service->long_description  = $request->long_description;
             $service->address  = $request->address;
             $service->discount  = $request->input("discount", 0);
-            $service->image  = $request->image;
+            // $service->image  = $request->image;
             // $service->booking_count  = $request->booking_count;
             $service->booking_count  = 0;
 
@@ -201,6 +201,15 @@ class AgencyServiceController extends Controller
             $agency = $request->user("agency");
             $service = Service::where("agency_id", $agency->id)->firstOrFail();
 
+            $service->name  = $request->input("name", $service->name);
+            $service->price  = $request->input("price", $service->price);
+            $service->short_description  = $request->input("short_description", $service->short_description);
+            $service->long_description  = $request->input("long_description", $service->long_description);
+            $service->address  = $request->input("address", $service->address);
+            $service->discount  = $request->input("discount", $service->discount ?? 0);
+            $service->save();
+
+
             // Handle image upload and update
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -222,55 +231,63 @@ class AgencyServiceController extends Controller
                     $service->image = $imagePath;
                     $service->save();
                 } catch (\Exception $e) {
-                    //throw $e;
+                    // throw $e;
                     // skip if not uploaded
                 }
             }
 
+
             // Check if there are thumbnail images in the request
             if ($request->hasFile('thumbnail')) {
-                $images = [];
                 // Create the "public/images" directory if it doesn't exist
-                if (!File::isDirectory(public_path("assets/images/service/thumbnails/$service->id"))) {
-                    File::makeDirectory((public_path("assets/images/service/thumbnails/$service->id")), 0777, true, true);
+                if (!File::isDirectory(public_path("assets/images/service/thumbnails/{$service->id}"))) {
+                    File::makeDirectory((public_path("assets/images/service/thumbnails/{$service->id}")), 0777, true, true);
                 }
 
-
+                $images = $service->thumbnail ?? [];
                 foreach ($request->file('thumbnail') as $key => $image) {
-                    $imageName = "thumbnail_$service->id_$key.png";
-                    $imagePath = "assets/images/service/thumbnails/$service->id/$imageName";
+                    $imageName = "thumbnail_{$service->id}_{$key}.png";
+                    $imagePath = "assets/images/service/thumbnails/{$service->id}/{$imageName}";
 
                     try {
 
                         // Save the image to the specified path
-                        $image->move(public_path('assets/images/service'), $imageName);
+                        $image->move(public_path("assets/images/service/thumbnails/{$service->id}"), $imageName);
 
                         // Save the main image to the specified path, resize it to 200x200 pixels
                         // Image::make($image)->resize(200, 200)->save(public_path($imagePath));
 
-                        $service->image = $imagePath;
-                        $service->save();
+                        $images[] = asset($imagePath);
                     } catch (\Exception $e) {
-                        //throw $e;
+                        // throw $e;
                         // skip if not uploaded
                     }
                 }
 
+                $images = array_unique(array_values($images));
                 // Set the "thumbnail" attribute as an array of relative paths
                 $service->thumbnail = $images;
                 $service->save();
             }
             // Save the Service instance to the database
 
-            $service->name  = $request->name;
-            $service->price  = $request->price;
-            $service->short_description  = $request->short_description;
-            $service->long_description  = $request->long_description;
-            $service->address  = $request->address;
-            $service->discount  = $request->input("discount", 0);
-            $service->save();
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Service successfully registered.",
+                "data"      => [
+                    "service" => $service,
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+
         } catch (\Throwable $th) {
-            //throw $th;
+            throw $e;
+            // return Response::json([
+            //     'success'   => false,
+            //     'status'    => HTTP::HTTP_FORBIDDEN,
+            //     'message'   => "Something went wrong.",
+            //     'err' => $e->getMessage(),
+            // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
 
