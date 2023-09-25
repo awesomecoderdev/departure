@@ -72,7 +72,7 @@ class WishlistController extends Controller
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
                 'message'   => "Something went wrong.",
-                // 'err' => $e->getMessage(),
+                'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
     }
