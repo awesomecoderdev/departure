@@ -24,15 +24,31 @@ class UpdateServiceRequest extends FormRequest
      */
     public function rules(): array
     {
+        // return [
+        //     "name" => "required|string|min:3",
+        //     "price" => "required|integer",
+        //     // "guide_id" => "nullable|integer",
+        //     // "agency_id" => "required|exists:agencies,id",
+        //     // "category_id" => "required|exists:categories,id",
+        //     "short_description" => "required|string",
+        //     "long_description" => "required|string",
+        //     "address" => "required|string",
+        //     // "discount" => "required|integer",
+        //     "thumbnail.*" => "nullable|image|mimes:jpeg,png,jpg|max:2048",
+        //     'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        //     // "metadata" => "required",
+        //     // "booking_count" => "required|integer",
+        // ];
+
         return [
             "name" => "required|string|min:3",
-            "price" => "required|integer",
+            "price" => "nullable|integer",
             // "guide_id" => "nullable|integer",
             // "agency_id" => "required|exists:agencies,id",
             // "category_id" => "required|exists:categories,id",
-            "short_description" => "required|string",
-            "long_description" => "required|string",
-            "address" => "required|string",
+            "short_description" => "nullable|string",
+            "long_description" => "nullable|string",
+            "address" => "nullable|string",
             // "discount" => "required|integer",
             "thumbnail.*" => "nullable|image|mimes:jpeg,png,jpg|max:2048",
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
