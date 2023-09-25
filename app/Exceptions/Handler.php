@@ -54,6 +54,13 @@ class Handler extends ExceptionHandler
     {
         // if (Str::startsWith($request->path(), 'api')) {
 
+        // Handel not found image exception
+        if ($e instanceof NotFoundHttpException && strpos($request->path(), "assets/images/service/thumbnails") !== false && strpos($request->path(), ".png") !== false) {
+            return Response::file("assets/images/service/default.png", [
+                'Content-type' => 'image/png'
+            ]);
+        }
+
         // Not FoundHttp Exception
         if ($e instanceof ModelNotFoundException || $e instanceof RouteNotFoundException || $e instanceof NotFoundHttpException) {
             return Response::json([
@@ -61,8 +68,10 @@ class Handler extends ExceptionHandler
                 'status'    => HTTP::HTTP_NOT_FOUND,
                 'message'   =>  "Not Found.",
                 'err'   => $e->getMessage(),
+                "r" => $request->path()
             ], HTTP::HTTP_NOT_FOUND);
         }
+
 
         if ($e instanceof TokenMismatchException) {
             return Response::json([
