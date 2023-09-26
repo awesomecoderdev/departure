@@ -22,7 +22,6 @@ class GuideMiddleware
                     'success'   => false,
                     'status'    => HTTP::HTTP_UNAUTHORIZED,
                     'message'   => "Unauthorized Access.",
-                    'guide' => $request->user("guide")
                 ], HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
             }
         } else if ($parameter == "false") {

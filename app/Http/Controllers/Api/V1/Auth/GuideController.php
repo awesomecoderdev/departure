@@ -224,13 +224,15 @@ class GuideController extends Controller
     {
         // get guide
         $guide = $request->user('guide');
-
-        $credentials = Arr::only($request->all(), [
-            'first_name',
-            'last_name',
-            'email',
-            'image',
-        ]);
+        $guide->first_name = $request->input('first_name', $guide->first_name);
+        $guide->last_name = $request->input('last_name', $guide->last_name);
+        $guide->email = $request->input('email', $guide->email);
+        $guide->phone = $request->input('phone', $guide->phone);
+        $guide->city = $request->input('city', $guide->city);
+        $guide->country = $request->input("country", $guide->country);
+        $guide->provider_id = $request->input("provider_id", $guide->provider_id);
+        $guide->access_token = $request->input("access_token", $guide->access_token);
+        $guide->firebase_token = $request->input("firebase_token", $guide->firebase_token);
 
         try {
             // Handle image upload and update
@@ -247,16 +249,15 @@ class GuideController extends Controller
 
                     // Save the image to the specified path
                     $image->move(public_path('assets/images/guide'), $imageName);
-                    $credentials["image"] = $imagePath;
+                    $guide->image = $imagePath;
                 } catch (\Exception $e) {
                     // throw $e;
                     // skip if not uploaded
                 }
             }
 
-
             // Update the guide data
-            $guide->update($credentials);
+            $guide->save();
 
             return Response::json([
                 'success'   => true,
@@ -268,7 +269,7 @@ class GuideController extends Controller
             return Response::json([
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
-                'message'   => "Something went wrong. Try after sometimes.",
+                'message'   => "Something went wrong.",
                 // 'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }

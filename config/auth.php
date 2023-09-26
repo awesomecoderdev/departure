@@ -90,7 +90,7 @@ return [
         ],
         'guides' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\Student::class,
+            'model' => \App\Models\Guide::class,
         ],
         'agencies' => [
             'driver' => 'eloquent',
