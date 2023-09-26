@@ -68,7 +68,6 @@ class Handler extends ExceptionHandler
                 'status'    => HTTP::HTTP_NOT_FOUND,
                 'message'   =>  "Not Found.",
                 'err'   => $e->getMessage(),
-                "r" => $request->path()
             ], HTTP::HTTP_NOT_FOUND);
         }
 

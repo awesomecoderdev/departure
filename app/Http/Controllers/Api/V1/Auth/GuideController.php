@@ -6,7 +6,7 @@ use App\Models\Guide;
 use App\Models\Agency;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Events\RegisteredAgency;
+use App\Events\RegisteredGuide;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -17,8 +17,9 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\V1\GuideResource;
 use App\Http\Requests\Api\V1\GuideLoginRequest;
-use App\Http\Requests\Api\V1\StoreAgencyRequest;
+use App\Http\Requests\Api\V1\StoreGuideRequest;
 use App\Http\Requests\Api\V1\UpdateGuideRequest;
+use App\Http\Requests\Api\V1\UpdateGuidePasswordRequest;
 
 class GuideController extends Controller
 {
@@ -74,7 +75,7 @@ class GuideController extends Controller
             return Response::json([
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
-                'message'   => "Something went wrong. Try after sometimes.",
+                'message'   => "Something went wrong.",
                 'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
@@ -138,23 +139,23 @@ class GuideController extends Controller
     /**
      * Crete a newly created guide in database.
      */
-    public function register(StoreAgencyRequest $request)
+    public function register(StoreGuideRequest $request)
     {
         try {
             // If the guide is not registered, proceed with registration
             $phone = $request->phone;
             $ttl = 1; // 1 min lock for otp
-            $guide = Agency::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'status' => $request->input("status", false),
-            ]);
+            $guide = new Guide();
 
-            event(new RegisteredAgency($guide));
+            $guide->first_name = $request->first_name;
+            $guide->last_name = $request->last_name;
+            $guide->phone = $request->phone;
+            $guide->email = $request->email;
+            $guide->password = Hash::make($request->password);
+            $guide->status = $request->input("status", false);
+            $guide->save();
 
+            event(new RegisteredGuide($guide));
 
             // Handle image upload and update
             if ($request->hasFile('image')) {
@@ -169,9 +170,9 @@ class GuideController extends Controller
                     }
 
                     // Save the image to the specified path
-                    // $image->move(public_path('assets/images/guide'), $imageName);
+                    $image->move(public_path('assets/images/guide'), $imageName);
 
-                    Image::make($image)->resize(200, 200)->save(public_path($imagePath));
+                    // Image::make($image)->resize(200, 200)->save(public_path($imagePath));
 
                     $guide->image = $imagePath;
                     $guide->save();
@@ -273,11 +274,50 @@ class GuideController extends Controller
         }
     }
 
+    /**
+     * Update customer password database.
+     */
+    public function password(UpdateGuidePasswordRequest $request)
+    {
+        // get guide
+        $guide = $request->user('guide');
+
+        try {
+            if (!$guide || !Hash::check($request->password, $guide->password)) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_UNAUTHORIZED,
+                    'message'   => "Unauthenticated credentials.",
+                    'errors' => [
+                        "password" => ['Invalid credentials.']
+                    ]
+                ],  HTTP::HTTP_UNAUTHORIZED); // HTTP::HTTP_OK
+            }
+
+            // Update the customer data
+            $guide->password = Hash::make($request->input("new_password", $request->password));
+            $guide->save();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Password updated successfully.",
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                // 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
 
     /**
-     * Delete guide from database.
+     * Deactivate guide from database.
      */
-    public function delete(Request $request)
+    public function deactivate(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'password' => 'required|string',
@@ -300,7 +340,10 @@ class GuideController extends Controller
             if (password_verify($request->password, $guide->password)) {
                 // Delete the account from the database
                 $guide->tokens()->delete();
-                $guide->delete();
+                // $guide->delete();
+
+                $guide->status = false;
+                $guide->save();
             } else {
                 return Response::json([
                     'success'   => false,
@@ -315,7 +358,7 @@ class GuideController extends Controller
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_ACCEPTED,
-                'message'   => "Account deleted successfully.",
+                'message'   => "Account deactivated successfully.",
             ],  HTTP::HTTP_ACCEPTED); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             //throw $e;

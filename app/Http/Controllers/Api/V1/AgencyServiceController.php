@@ -175,7 +175,7 @@ class AgencyServiceController extends Controller
     {
         try {
             $agency = $request->user("agency");
-            $service = Service::with(["facilities"])->where("agency_id", $agency->id)->firstOrFail();
+            $service = Service::with(["facilities"])->where("agency_id", $agency->id)->where("id", $request->service)->firstOrFail();
 
             return Response::json([
                 'success'   => true,

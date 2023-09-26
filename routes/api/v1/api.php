@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\AgencyGuideController;
 use App\Http\Controllers\Api\V1\Auth\AgencyController;
 use App\Http\Controllers\Api\V1\AgencyServiceController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
+use App\Http\Controllers\Api\V1\Auth\GuideController;
 use App\Http\Controllers\Api\V1\ServiceFacilityController;
 
 /*
@@ -55,6 +56,30 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/wishlist/delete', [WishlistController::class, 'destroy'])->name("wishlist.destroy");
         });
     });
+
+    // Guide Routes
+    Route::group(['prefix' => 'guide', 'as' => 'guide.', "controller" => GuideController::class], function () {
+        // guest route
+        Route::middleware(['guide:false'])->group(function () {
+            Route::post('/login', 'login')->name("login");
+            Route::post('/register', 'register')->name("register");
+        });
+
+        // authorization route
+        Route::middleware(['guide'])->group(function () {
+            Route::get('/', 'guide')->name("guide");
+            Route::post('/update', 'update')->name("update");
+            Route::post('/update/password', 'password')->name("password");
+            Route::post('/deactivate', 'deactivate')->name("deactivate");
+            Route::post('/logout', 'logout')->name("logout");
+
+            // wishlist route
+            Route::get('/wishlist', [WishlistController::class, 'index'])->name("wishlist.index");
+            Route::post('/wishlist/register', [WishlistController::class, 'register'])->name("wishlist.register");
+            Route::post('/wishlist/delete', [WishlistController::class, 'destroy'])->name("wishlist.destroy");
+        });
+    });
+
 
     // Agency Routes
     Route::group(['prefix' => 'agency', 'as' => 'agency.', "controller" => AgencyController::class], function () {
