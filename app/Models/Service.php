@@ -77,7 +77,7 @@ class Service extends Model
      */
     public function facilities(): HasMany
     {
-        return $this->hasMany(Facility::class);
+        return $this->hasMany(Facility::class)->orderBy("id", "DESC");
     }
 
     /**

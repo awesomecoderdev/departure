@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Icon;
 use App\Models\Service;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -58,6 +59,15 @@ class Facility extends Model
         return $this->belongsTo(Service::class);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Icon
+     */
+    public function icon() //: HasMany
+    {
+        return $this->belongsTo(Icon::class);
+    }
 
     /**
      * Interact with the image.
