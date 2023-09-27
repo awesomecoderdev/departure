@@ -285,7 +285,7 @@ class AgencyServiceController extends Controller
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
-                'message'   => "Service successfully registered.",
+                'message'   => "Service successfully updated.",
                 "data"      => [
                     "service" => $service,
                 ]
