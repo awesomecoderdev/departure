@@ -52,7 +52,7 @@ class ServiceFacilityController extends Controller
             $facility = Facility::where("agency_id", $agency->id)->where("id", $request->facility)->firstOrFail();
             $facility->delete();
 
-            return response()->json([
+            return Response::json([
                 'success' => true,
                 'status' => HTTP::HTTP_OK,
                 'message' => "Facility successfully deleted.",

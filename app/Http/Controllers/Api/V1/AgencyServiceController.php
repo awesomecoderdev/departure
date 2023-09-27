@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Api\V1\StoreServiceRequest;
 use App\Http\Requests\Api\V1\UpdateServiceRequest;
+use Exception;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use PHPUnit\Event\Code\Throwable;
 
 class AgencyServiceController extends Controller
 {
@@ -214,7 +217,6 @@ class AgencyServiceController extends Controller
             $service->discount  = $request->input("discount", $service->discount ?? 0);
             $service->save();
 
-
             // Handle image upload and update
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -320,11 +322,71 @@ class AgencyServiceController extends Controller
 
             $service->delete();
 
-            return response()->json([
+            return Response::json([
                 'success' => true,
                 'status' => HTTP::HTTP_OK,
                 'message' => "Service successfully deleted.",
             ], HTTP::HTTP_OK);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function thumbnail(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'thumbnail_id' => 'required|integer',
+            ]);
+
+            if ($validator->fails()) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                    'message'   => "Validation failed.",
+                    'errors' => $validator->errors()
+                ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+            }
+
+            $agency = $request->user("agency");
+            $service = Service::where("agency_id", $agency->id)->where("id", $request->service)->firstOrFail();
+            $thumbnails = $service?->thumbnail?->toArray() ?? [];
+
+            if (isset($thumbnails[$request->thumbnail_id])) {
+                $thumbnail = $thumbnails[$request->thumbnail_id];
+
+                if (strpos($thumbnail, "assets/images/service/thumbnails") !== false) {
+                    $path = str_replace(asset("/"), "", $thumbnail);
+
+                    $imagePath = public_path($path);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+
+                    unset($thumbnails[$request->thumbnail_id]);
+
+                    $service->thumbnail = array_values($thumbnails) ?? [];
+                    $service->save();
+
+                    return Response::json([
+                        'success' => true,
+                        'status' => HTTP::HTTP_OK,
+                        'message' => "Service successfully deleted.",
+                        'data'      => [
+                            'service'  => $service
+                        ]
+                    ], HTTP::HTTP_OK);
+                }
+            }
+
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_NOT_FOUND,
+                'message'   => "Thumbnail dose not exist.",
+            ],  HTTP::HTTP_NOT_FOUND); // HTTP::HTTP_OK
         } catch (\Exception $e) {
             throw $e;
         }

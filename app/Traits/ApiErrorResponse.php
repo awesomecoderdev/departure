@@ -19,7 +19,7 @@ trait ApiErrorResponse
     {
         $errors = $e->validator->errors()->getMessages();
 
-        return response()->json([
+        return Response::json([
             'success' => false,
             'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
             'message' => 'Validation failed.',
@@ -36,7 +36,7 @@ trait ApiErrorResponse
      */
     protected function failedValidation($validator)
     {
-        throw new HttpResponseException(response()->json([
+        throw new HttpResponseException(Response::json([
             'success' => false,
             'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
             'message' => 'Validation failed.',

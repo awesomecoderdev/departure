@@ -72,11 +72,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/update/password', 'password')->name("password");
             Route::post('/deactivate', 'deactivate')->name("deactivate");
             Route::post('/logout', 'logout')->name("logout");
-
-            // wishlist route
-            Route::get('/wishlist', [WishlistController::class, 'index'])->name("wishlist.index");
-            Route::post('/wishlist/register', [WishlistController::class, 'register'])->name("wishlist.register");
-            Route::post('/wishlist/delete', [WishlistController::class, 'destroy'])->name("wishlist.destroy");
         });
     });
 
@@ -112,7 +107,7 @@ Route::group(['prefix' => 'agency', 'as' => 'agency.', 'middleware' => "agency"]
         Route::post('/register', [AgencyServiceController::class, 'register'])->name("register");
         Route::post('/update/{service}', [AgencyServiceController::class, 'update'])->name("update");
         Route::post('/delete/{service}', [AgencyServiceController::class, 'destroy'])->name("delete");
-
+        Route::post('/thumbnail/delete/{service}', [AgencyServiceController::class, 'thumbnail'])->name("thumbnail.delete");
 
         // Facility routes
         Route::post('/facilities/register', [ServiceFacilityController::class, 'register'])->name("facilities.register");
