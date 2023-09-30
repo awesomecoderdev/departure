@@ -4,14 +4,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IconController;
 use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\Api\V1\FrontendController;
+use App\Http\Controllers\Api\V1\Auth\GuideController;
 use App\Http\Controllers\Api\V1\AgencyGuideController;
 use App\Http\Controllers\Api\V1\Auth\AgencyController;
 use App\Http\Controllers\Api\V1\AgencyServiceController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
-use App\Http\Controllers\Api\V1\Auth\GuideController;
+use App\Http\Controllers\Api\V1\CustomerBookingController;
 use App\Http\Controllers\Api\V1\ServiceFacilityController;
 
 /*
@@ -54,6 +55,14 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::get('/wishlist', [WishlistController::class, 'index'])->name("wishlist.index");
             Route::post('/wishlist/register', [WishlistController::class, 'register'])->name("wishlist.register");
             Route::post('/wishlist/delete', [WishlistController::class, 'destroy'])->name("wishlist.destroy");
+
+            // bookings route
+            // bookings
+            Route::get('/booking', [CustomerBookingController::class, "booking"])->name("booking");
+            Route::post('/booking/register', [CustomerBookingController::class, "register"])->name("booking.register");
+            Route::post('/booking/update', [CustomerBookingController::class, "change"])->name("booking.change");
+            Route::get('/booking/details/{booking}', [CustomerBookingController::class, "details"])->name("booking.details");
+            Route::get('/booking/calculate', [CustomerBookingController::class, "calculate"])->name("booking.calculate");
         });
     });
 
@@ -75,7 +84,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         });
     });
 
-
     // Agency Routes
     Route::group(['prefix' => 'agency', 'as' => 'agency.', "controller" => AgencyController::class], function () {
         // guest route
@@ -94,7 +102,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
         });
     });
 });
-
 
 // agency routes
 Route::group(['prefix' => 'agency', 'as' => 'agency.', 'middleware' => "agency"], function () {
@@ -123,7 +130,6 @@ Route::group(['prefix' => 'agency', 'as' => 'agency.', 'middleware' => "agency"]
     });
 });
 
-
 // Services routes
 Route::resource('service', ServiceController::class)->only(["index"]);
 Route::group(["as" => "service.", 'prefix' => 'service', "controller" => ServiceController::class], function () {
@@ -136,7 +142,6 @@ Route::group(["as" => "service.", 'prefix' => 'service', "controller" => Service
     // Route::post('/update', 'update')->name("update");
     // Route::post('/review/{service}', 'review')->middleware("customer")->name("review");
 });
-
 
 // Categories routes
 Route::group(["as" => "categories.", "controller" => CategoryController::class], function () {

@@ -2,7 +2,8 @@
 
 namespace App\Traits;
 
-use Illuminate\Http\Response;
+use Illuminate\Http\Response as HTTP;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -21,10 +22,10 @@ trait ApiErrorResponse
 
         return Response::json([
             'success' => false,
-            'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            'status' => HTTP::HTTP_UNPROCESSABLE_ENTITY,
             'message' => 'Validation failed.',
             'errors' => $errors,
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        ], HTTP::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     /**
@@ -38,10 +39,10 @@ trait ApiErrorResponse
     {
         throw new HttpResponseException(Response::json([
             'success' => false,
-            'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            'status' => HTTP::HTTP_UNPROCESSABLE_ENTITY,
             'message' => 'Validation failed.',
             'errors' => $validator->errors(),
-        ], Response::HTTP_UNPROCESSABLE_ENTITY));
+        ], HTTP::HTTP_UNPROCESSABLE_ENTITY));
     }
 
     // Add more methods for handling other API-related errors as needed...
