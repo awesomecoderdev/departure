@@ -26,7 +26,7 @@ class CustomerBookingController extends Controller
             // Get the user's id from token header and get his provider bookings
             // status
             $params = Arr::only($request->input(), ["query", "zone_id", "per_page"]);
-            $customer = $request->user("customers");
+            $customer = $request->user("customer");
             $bookings = Booking::with([
                 "agency",
                 "service",
