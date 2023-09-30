@@ -47,7 +47,7 @@ class CustomerBookingController extends Controller
             return Response::json([
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
-                'message'   => "Something went wrong. Try after sometimes.",
+                'message'   => "Something went wrong.",
                 // 'err' => $e->getMessage(),
             ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
         }
