@@ -12,8 +12,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\StoreBookingRequest;
 use App\Http\Resources\Api\V1\CustomerResource;
+use App\Http\Requests\Api\V1\StoreBookingRequest;
 
 class CustomerBookingController extends Controller
 {
@@ -43,7 +43,7 @@ class CustomerBookingController extends Controller
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
-            //throw $e;
+            throw $e;
             return Response::json([
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
@@ -119,185 +119,111 @@ class CustomerBookingController extends Controller
      */
     public function register(StoreBookingRequest $request)
     {
-        // try {
-        //     $errors = [];
-        //     $calculation = [];
-        //     $today = Carbon::now();
-        //     $customer = $request->user("customers");
-        //     $customer->load("address");
-        //     $service = Service::where("id", $request->service_id)->where("status", true)->firstOrFail();
-        //     $coupon = Coupon::where("provider_id", $service->provider_id)->where("code", $request->input("coupon", 0))->first();
-        //     $campaign = Campaign::where("id", $request->input("campaign_id", 0))->first();
-        //     $service = Service::where("id", $request->service_id)->firstOrFail();
-        //     $quantity = $request->input("quantity", 1);
-        //     $quantity = $quantity < 1 ? 1 : $quantity;
+        try {
+            $calculation = [];
+            $today = Carbon::now();
+            $customer = $request->user("customer");
+            $service = Service::where("id", $request->service_id)->where("status", true)->firstOrFail();
+            $service = Service::where("id", $request->service_id)->firstOrFail();
+            $quantity = $request->input("quantity", 1);
+            $quantity = $quantity < 1 ? 1 : $quantity;
 
-        //     if ($request->filled("schedule")) {
-        //         if ($request->schedule < date("Y-m-d", strtotime($today))) {
-        //             return Response::json([
-        //                 'success'   => false,
-        //                 'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
-        //                 'message'   => "Validation failed.",
-        //                 'errors' => [
-        //                     "schedule" => [
-        //                         "Please select a valid schedule.",
-        //                     ]
-        //                 ]
-        //             ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
-        //         }
-        //     }
+            if ($request->filled("schedule")) {
+                if ($request->schedule < date("Y-m-d", strtotime($today))) {
+                    return Response::json([
+                        'success'   => false,
+                        'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                        'message'   => "Validation failed.",
+                        'errors' => [
+                            "schedule" => [
+                                "Please select a valid schedule.",
+                            ]
+                        ]
+                    ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+                }
+            }
 
-        //     // data
-        //     $price = intval($service->price);
-        //     $discount = intval($service->discount);
-        //     $tax = intval($price * ($service->tax / 100));
+            // data
+            $price = intval($service->price);
+            $discount = intval($service->discount);
 
-        //     // discount price
-        //     $discountPrice = $price - $discount;
-        //     // with tax
-        //     $withTax = $discountPrice + $tax;
-
-        //     if ($coupon && $coupon->end >= $today) { // with coupon
-        //         // coupon minimum amount
-        //         if ($withTax < $coupon->min_amount) {
-        //             $totalDiscount = $discount;
-        //             $subtotal = $withTax;
-        //             $totalAmount = $quantity * $subtotal;
-        //             $calculation = [
-        //                 "price" => $price,
-        //                 "discount" => $discount,
-        //                 "total_discount" => $totalDiscount,
-        //                 "with_discount" => $discountPrice,
-        //                 "tax" => $service->tax,
-        //                 "total_tax" => $tax,
-        //                 "with_tax" => $withTax,
-        //                 "with_coupon" => $totalAmount,
-        //                 "without_coupon" => $withTax,
-        //                 "subtotal" => $subtotal,
-        //                 "total_amount" => $totalAmount,
-        //             ];
-        //             $errors = [
-        //                 "errors" => [
-        //                     "coupon" => [
-        //                         "To get coupon discount, minimum requirements is ৳$coupon->min_amount order."
-        //                     ]
-        //                 ]
-        //             ];
-        //         } else {
-        //             // with coupon
-        //             $totalDiscount = $discount + $coupon->discount;
-        //             $subtotal = $withTax - $coupon->discount;
-        //             $totalAmount = $quantity * $subtotal;
-        //             $calculation = [
-        //                 "price" => $price,
-        //                 "discount" => $discount,
-        //                 "total_discount" => $totalDiscount,
-        //                 "with_discount" => $discountPrice,
-        //                 "tax" => $service->tax,
-        //                 "total_tax" => $tax,
-        //                 "with_tax" => $withTax,
-        //                 "with_coupon" => $totalAmount,
-        //                 "without_coupon" => $withTax,
-        //                 "subtotal" => $subtotal,
-        //                 "total_amount" => $totalAmount,
-        //             ];
-        //         }
-        //     } else { // without coupon
-        //         $totalDiscount = $discount;
-        //         $subtotal = $withTax;
-        //         $totalAmount = $quantity * $subtotal;
-
-        //         $calculation = [
-        //             "price" => $price,
-        //             "discount" => $discount,
-        //             "total_discount" => $totalDiscount,
-        //             "with_discount" => $discountPrice,
-        //             "tax" => $service->tax,
-        //             "total_tax" => $tax,
-        //             "with_tax" => $withTax,
-        //             "with_coupon" => $totalAmount,
-        //             "without_coupon" => $withTax,
-        //             "subtotal" => $subtotal,
-        //             "total_amount" => $totalAmount,
-        //         ];
-        //         $errors = [
-        //             "errors" => [
-        //                 "coupon" => [
-        //                     "Invalid Coupon Code."
-        //                 ]
-        //             ]
-        //         ];
-        //     }
+            // discount price
+            $discountPrice = $price - $discount;
 
 
-        //     // need to calculate total tax etc
-        //     $total_amount = intval($totalAmount);
-        //     $total_tax = intval($tax);
-        //     $total_discount = intval($totalDiscount);
-        //     $additional_charge = intval(0);
-        //     // start Transaction
-        //     DB::beginTransaction();
+            // without coupon
+            $totalDiscount = $discount;
+            $subtotal = $discountPrice;
+            $totalAmount = $quantity * $subtotal;
 
-        //     // new booking
-        //     $booking = new Booking();
-        //     $booking->customer_id = $customer->id;
-        //     $booking->address_id = $customer->address->id ?? 0;
-        //     $booking->service_id = $service->id;
-        //     $booking->provider_id = $service->provider_id;
-        //     $booking->hint = $request->hint;
-        //     $booking->quantity = $quantity;
-
-        //     $booking->metadata = [
-        //         "service" => $service,
-        //         "customer" => new CustomerResource($customer),
-        //         "coupon" => $coupon,
-        //         "campaign" => $campaign,
-        //         "calculation" => $calculation
-        //     ];
-
-        //     $booking->coupon_id = $request->input("coupon_id", 0);
-        //     $booking->campaign_id = $request->input("campaign_id", 0);
-        //     // $booking->handyman_id = $request->input("handyman_id", 0);
-        //     $booking->category_id = $service->category_id;
-        //     $booking->zone_id = $service->zone_id;
-        //     $booking->payment_method = $request->payment_method;
-        //     // $booking->status = $request->status;
-        //     // $booking->is_paid = $request->is_paid;
-        //     // $booking->is_paid = $request->is_paid;
-        //     $booking->total_amount = $total_amount;
-        //     $booking->total_tax = $total_tax;
-        //     $booking->total_discount = $total_discount;
-        //     $booking->additional_charge = $additional_charge;
-        //     $booking->is_rated = false; // that mean booking is not given rating
-        //     $booking->schedule = Carbon::parse($request->schedule)->startOfDay();
-        //     $booking->save();
-
-        //     // end transaction
-        //     DB::commit();
+            $calculation = [
+                "price" => $price,
+                "discount" => $discount,
+                "total_discount" => $totalDiscount,
+                "with_discount" => $discountPrice,
+                "tax" => $service->tax,
+                "subtotal" => $subtotal,
+                "total_amount" => $totalAmount,
+            ];
 
 
-        //     return Response::json(
-        //         [
-        //             'success'   => true,
-        //             'status'    => HTTP::HTTP_CREATED,
-        //             'message'   => "Booking successfully created.",
-        //             // "data"      => [
-        //             // "customer" => $customer,
-        //             // "booking" => $booking,
-        //             // "service" => $service
-        //             // ]
-        //         ],
-        //         HTTP::HTTP_CREATED
-        //     ); // HTTP::HTTP_OK
-        // } catch (\Exception $e) {
-        //     throw $e;
-        //     // return Response::json([
-        //     //     'success'   => false,
-        //     //     'status'    => HTTP::HTTP_FORBIDDEN,
-        //     //     'message'   => "Something went wrong. Try after sometimes.",
-        //     //     'err' => $e->getMessage(),
-        //     // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
-        // }
+            // need to calculate total tax etc
+            $total_amount = intval($totalAmount);
+            $total_discount = intval($totalDiscount);
+            $additional_charge = intval(0);
+            // start Transaction
+            DB::beginTransaction();
+
+            // new booking
+            $booking = new Booking();
+            $booking->customer_id = $customer->id;
+            $booking->service_id = $service->id;
+            $booking->agency_id = $service->agency_id;
+            // $booking->quantity = $quantity;
+
+            $booking->metadata = [
+                "service" => $service,
+                "customer" => new CustomerResource($customer),
+                "calculation" => $calculation
+            ];
+
+            // $booking->handyman_id = $request->input("handyman_id", 0);
+            // $booking->payment_method = $request->payment_method;
+            // $booking->status = $request->status;
+            $booking->total_amount = $total_amount;
+            $booking->total_discount = $total_discount;
+            $booking->additional_charge = $additional_charge;
+            $booking->is_rated = false; // that mean booking is not given rating
+            $booking->check_in = Carbon::parse($request->check_in)->startOfDay();
+            $booking->check_out = Carbon::parse($request->check_out)->startOfDay();
+            $booking->save();
+
+            // end transaction
+            DB::commit();
+
+
+            return Response::json(
+                [
+                    'success'   => true,
+                    'status'    => HTTP::HTTP_CREATED,
+                    'message'   => "Booking successfully created.",
+                    // "data"      => [
+                    // "customer" => $customer,
+                    // "booking" => $booking,
+                    // "service" => $service
+                    // ]
+                ],
+                HTTP::HTTP_CREATED
+            ); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            // return Response::json([
+            //     'success'   => false,
+            //     'status'    => HTTP::HTTP_FORBIDDEN,
+            //     'message'   => "Something went wrong. Try after sometimes.",
+            //     'err' => $e->getMessage(),
+            // ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Agency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
@@ -48,6 +49,26 @@ class Booking extends Model
         'calculation' => AsCollection::class,
         'metadata' => AsCollection::class,
     ];
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Service
+     */
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Agency
+     */
+    public function agency()
+    {
+        return $this->belongsTo(Agency::class);
+    }
 
     /**
      * Interact with the image.
