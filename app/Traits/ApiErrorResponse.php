@@ -44,6 +44,4 @@ trait ApiErrorResponse
             'errors' => $validator->errors(),
         ], HTTP::HTTP_UNPROCESSABLE_ENTITY));
     }
-
-    // Add more methods for handling other API-related errors as needed...
 }
