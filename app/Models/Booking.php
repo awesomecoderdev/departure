@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Agency;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
@@ -69,6 +70,17 @@ class Booking extends Model
     {
         return $this->belongsTo(Agency::class);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Customer
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
 
     /**
      * Interact with the image.

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\AgencyBookingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IconController;
@@ -57,7 +58,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/wishlist/delete', [WishlistController::class, 'destroy'])->name("wishlist.destroy");
 
             // bookings route
-            // bookings
             Route::get('/booking', [CustomerBookingController::class, "booking"])->name("booking");
             Route::post('/booking/register', [CustomerBookingController::class, "register"])->name("booking.register");
             Route::post('/booking/update', [CustomerBookingController::class, "change"])->name("booking.change");
@@ -99,6 +99,10 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/update/password', 'password')->name("password");
             Route::post('/deactivate', 'deactivate')->name("deactivate");
             Route::post('/logout', 'logout')->name("logout");
+
+
+            // bookings route
+            Route::get('/booking', [AgencyBookingController::class, "booking"])->name("booking");
         });
     });
 });

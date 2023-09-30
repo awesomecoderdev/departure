@@ -42,7 +42,6 @@ class Handler extends ExceptionHandler
         });
     }
 
-
     /**
      * Render an exception into an HTTP response.
      *
