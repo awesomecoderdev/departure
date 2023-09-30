@@ -251,7 +251,7 @@ class AgencyServiceController extends Controller
                     File::makeDirectory((public_path("assets/images/service/thumbnails/{$service->id}")), 0777, true, true);
                 }
 
-                $images = $service->thumbnail->toArray() ?? [];
+                $images = $service?->thumbnail?->toArray() ?? [];
                 $thumbnails = $service?->thumbnail?->count() ?? 0;
                 foreach ($request->file('thumbnail') as $key => $image) {
                     $key = $key + $thumbnails;
