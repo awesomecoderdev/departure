@@ -1,23 +1,23 @@
-name: Server Deployment
+# name: Server Deployment
 
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+# on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
+#     branches: ["main"]
 
-jobs:
-  web-deploy:
-    name: 🎉 Cpanel Deployment
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-      - name: 📂 Sync folders and files to the server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASSWORD }}
+# jobs:
+#   web-deploy:
+#     name: 🎉 Cpanel Deployment
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: 🚚 Get latest code
+#         uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 2
+#       - name: 📂 Sync folders and files to the server
+#         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+#         with:
+#           server: ${{ secrets.FTP_SERVER }}
+#           username: ${{ secrets.FTP_USER }}
+#           password: ${{ secrets.FTP_PASSWORD }}
