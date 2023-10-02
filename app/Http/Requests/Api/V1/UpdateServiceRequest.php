@@ -41,7 +41,7 @@ class UpdateServiceRequest extends FormRequest
         // ];
 
         return [
-            "name" => "required|string|min:3",
+            "name" => "nullable|string|min:3",
             "price" => "nullable|integer",
             // "guide_id" => "nullable|integer",
             // "agency_id" => "required|exists:agencies,id",
