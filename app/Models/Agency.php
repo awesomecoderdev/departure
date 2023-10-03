@@ -64,7 +64,7 @@ class Agency  extends Authenticatable
      */
     public function guides(): HasMany
     {
-        return $this->hasMany(Guide::class);
+        return $this->hasMany(Guide::class)->orderBy("id", "DESC");
     }
 
     /**
