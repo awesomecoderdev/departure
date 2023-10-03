@@ -20,3 +20,4 @@ yarn-error.log
 .git
 .DS_Store
 .editorconfig
+/public/assets
