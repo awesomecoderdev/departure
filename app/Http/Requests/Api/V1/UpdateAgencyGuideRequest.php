@@ -26,7 +26,7 @@ class UpdateAgencyGuideRequest extends FormRequest
     {
         return [
             // "agency_id"             => "nullable|integer|exists:agencies,id",
-            "guide"                 => "required|integer|exists:guides,id",
+            // "guide"                 => "required|integer|exists:guides,id",
             "first_name"            => "required|string|min:3|max:20",
             "last_name"             => "required|string|min:3|max:20",
             "email"                 => "required|email|string|unique:guides,email|$this->guide_id",
