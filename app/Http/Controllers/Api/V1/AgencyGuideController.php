@@ -159,7 +159,7 @@ class AgencyGuideController extends Controller
             }
             $guide->phone = $request->input("phone", $guide->phone);
             $guide->city = $request->input("city", $guide->city);
-            $guide->country = $request->input("country", $guide->country);
+            // $guide->country = $request->input("country", $guide->country);
             $guide->access_token = $request->input("access_token", $guide->access_token);
             $guide->firebase_token = $request->input("firebase_token", $guide->firebase_token);
 
