@@ -150,6 +150,19 @@ class AgencyGuideController extends Controller
                 // "status",
             ]);
 
+            $guide->agency_id = $agency->id;
+            $guide->first_name = $request->input("first_name", $guide->first_name);
+            $guide->last_name = $request->input("last_name", $guide->last_name);
+            $guide->email = $request->input("email", $guide->email);
+            if ($request->filled("password")) {
+                $guide->password = Hash::make($request->password);
+            }
+            $guide->phone = $request->input("phone", $guide->phone);
+            $guide->city = $request->input("city", $guide->city);
+            $guide->country = $request->input("country", $guide->country);
+            $guide->access_token = $request->input("access_token", $guide->access_token);
+            $guide->firebase_token = $request->input("firebase_token", $guide->firebase_token);
+
             // Handle image upload and update
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -164,7 +177,7 @@ class AgencyGuideController extends Controller
 
                     // Save the image to the specified path
                     $image->move(public_path('assets/images/guide'), $imageName);
-                    $credentials["image"] = $imagePath;
+                    $guide->image = $imagePath;
                 } catch (\Exception $e) {
                     // throw $e;
                     // skip if not uploaded
@@ -173,7 +186,7 @@ class AgencyGuideController extends Controller
 
 
             // Update the guide data
-            $guide->update($credentials);
+            $guide->save();
 
             return Response::json([
                 'success'   => true,
