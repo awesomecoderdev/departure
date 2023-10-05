@@ -47,7 +47,7 @@ class AgencyServiceController extends Controller
             $agency = $request->user("agency");
 
             $params = Arr::only($request->input(), ["category_id"]);
-            $services = Service::with(["facilities"])->where("agency_id", $agency->id)->when($category, function ($query) use ($category) {
+            $services = Service::with(["facilities.icon"])->where("agency_id", $agency->id)->when($category, function ($query) use ($category) {
                 return $query->where('category_id', $category);
             })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 

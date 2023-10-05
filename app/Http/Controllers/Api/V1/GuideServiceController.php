@@ -47,7 +47,7 @@ class GuideServiceController extends Controller
             $guide = $request->user("guide");
 
             $params = Arr::only($request->input(), ["category_id"]);
-            $services = Service::with(["facilities"])->where("guide_id", $guide->id)->when($category, function ($query) use ($category) {
+            $services = Service::with(["facilities.icon"])->where("guide_id", $guide->id)->when($category, function ($query) use ($category) {
                 return $query->where('category_id', $category);
             })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
@@ -60,7 +60,7 @@ class GuideServiceController extends Controller
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {
-            //throw $e;
+            throw $e;
             return Response::json([
                 'success'   => false,
                 'status'    => HTTP::HTTP_FORBIDDEN,
@@ -226,8 +226,6 @@ class GuideServiceController extends Controller
 
             $service = Service::where("guide_id", $guide->id)->where("id", $request->service)->firstOrFail();
 
-
-
             $service->name  = $request->input("name", $service->name);
             $service->price  = $request->input("price", $service->price);
             $service->short_description  = $request->input("short_description", $service->short_description);
@@ -262,7 +260,6 @@ class GuideServiceController extends Controller
                 }
             }
 
-
             // Check if there are thumbnail images in the request
             if ($request->hasFile('thumbnail')) {
                 // Create the "public/images" directory if it doesn't exist
@@ -271,13 +268,12 @@ class GuideServiceController extends Controller
                 }
 
                 $images = $service?->thumbnail?->toArray() ?? [];
-                $thumbnails = $service?->thumbnail?->count() ?? 0;
                 foreach ($request->file('thumbnail') as $key => $image) {
-                    $key = $key + $thumbnails;
+                    $key = md5(time() . rand(1, 1000));
                     $imageName = "thumbnail_{$service->id}_{$key}.png";
                     $imagePath = "assets/images/service/thumbnails/{$service->id}/{$imageName}";
 
-                    if ($key > 4) {
+                    if (count($images) > 4) {
                         break; // skip if images is more then 5
                     }
 
@@ -341,8 +337,30 @@ class GuideServiceController extends Controller
 
             if (!empty($service->image)) {
                 $imagePath = public_path($service->image);
+
+                if (strpos($service->image, "assets/images/service") !== false) {
+                    $path = str_replace(asset("/"), "", $imagePath);
+                    $imagePath = public_path($path);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                }
+
                 if (file_exists($imagePath)) {
                     unlink($imagePath);
+                }
+            }
+
+            if ($service->thumbnail) {
+                foreach ($service->thumbnail as $key => $thumbnail) {
+                    if (strpos($thumbnail, "assets/images/service/thumbnails") !== false) {
+                        $path = str_replace(asset("/"), "", $thumbnail);
+
+                        $imagePath = public_path($path);
+                        if (file_exists($imagePath)) {
+                            unlink($imagePath);
+                        }
+                    }
                 }
             }
 
@@ -363,22 +381,31 @@ class GuideServiceController extends Controller
      */
     public function thumbnail(Request $request)
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                'thumbnail_id' => 'required|integer',
-            ]);
+        $validator = Validator::make($request->all(), [
+            'thumbnail_id' => 'required|integer',
+        ]);
 
-            if ($validator->fails()) {
+        if ($validator->fails()) {
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
+                'message'   => "Validation failed.",
+                'errors' => $validator->errors()
+            ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+        }
+
+        try {
+
+            $guide = $request->user("guide");
+            if ($guide->agency_id != 0) {
                 return Response::json([
                     'success'   => false,
-                    'status'    => HTTP::HTTP_UNPROCESSABLE_ENTITY,
-                    'message'   => "Validation failed.",
-                    'errors' => $validator->errors()
-                ],  HTTP::HTTP_UNPROCESSABLE_ENTITY); // HTTP::HTTP_OK
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "You are not allowed to delete thumbnail.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
             }
 
-            $agency = $request->user("agency");
-            $service = Service::where("agency_id", $agency->id)->where("id", $request->service)->firstOrFail();
+            $service = Service::where("guide_id", $guide->id)->where("id", $request->service)->firstOrFail();
             $thumbnails = $service?->thumbnail?->toArray() ?? [];
 
             if (isset($thumbnails[$request->thumbnail_id])) {
