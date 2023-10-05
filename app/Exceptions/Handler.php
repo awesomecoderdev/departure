@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
         // Handel not found image exception
         if ($e instanceof NotFoundHttpException && strpos($request->path(), "assets/images/service/thumbnails") !== false && strpos($request->path(), ".png") !== false) {
             return Response::file("assets/images/service/thumbnails/default.png", [
-                'Content-type' => 'image/png'
+                'Content-type' => 'image/png',
             ]);
         }
 
