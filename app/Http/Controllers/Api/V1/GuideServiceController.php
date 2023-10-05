@@ -78,6 +78,14 @@ class GuideServiceController extends Controller
         try {
             $guide = $request->user("guide");
 
+            if ($guide->agency_id != 0) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "You are not allowed to create service.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
             $service = new Service();
             $service->name  = $request->name;
             $service->price  = $request->price;
@@ -207,8 +215,18 @@ class GuideServiceController extends Controller
     {
 
         try {
-            $agency = $request->user("agency");
-            $service = Service::where("agency_id", $agency->id)->where("id", $request->service)->firstOrFail();
+            $guide = $request->user("guide");
+            if ($guide->agency_id != 0) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "You are not allowed to update service.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+
+            $service = Service::where("guide_id", $guide->id)->where("id", $request->service)->firstOrFail();
+
+
 
             $service->name  = $request->input("name", $service->name);
             $service->price  = $request->input("price", $service->price);
@@ -311,8 +329,15 @@ class GuideServiceController extends Controller
     public function destroy(Request $request)
     {
         try {
-            $agency = $request->user("agency");
-            $service = Service::where("agency_id", $agency->id)->where("id", $request->service)->firstOrFail();
+            $guide = $request->user("guide");
+            if ($guide->agency_id != 0) {
+                return Response::json([
+                    'success'   => false,
+                    'status'    => HTTP::HTTP_FORBIDDEN,
+                    'message'   => "You are not allowed to delete service.",
+                ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+            }
+            $service = Service::where("guide_id", $guide->id)->where("id", $request->service)->firstOrFail();
 
             if (!empty($service->image)) {
                 $imagePath = public_path($service->image);
