@@ -44,10 +44,10 @@ class GuideServiceController extends Controller
         }
 
         try {
-            $agency = $request->user("agency");
+            $guide = $request->user("guide");
 
             $params = Arr::only($request->input(), ["category_id"]);
-            $services = Service::with(["facilities"])->where("agency_id", $agency->id)->when($category, function ($query) use ($category) {
+            $services = Service::with(["facilities"])->where("guide_id", $guide->id)->when($category, function ($query) use ($category) {
                 return $query->where('category_id', $category);
             })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
@@ -76,12 +76,12 @@ class GuideServiceController extends Controller
     public function register(StoreServiceRequest $request)
     {
         try {
-            $agency = $request->user("agency");
+            $guide = $request->user("guide");
 
             $service = new Service();
             $service->name  = $request->name;
             $service->price  = $request->price;
-            $service->agency_id  = $agency->id;
+            $service->guide_id  = $guide->id;
             $service->short_description  = $request->short_description;
             $service->long_description  = $request->long_description;
             $service->address  = $request->address;
@@ -177,8 +177,9 @@ class GuideServiceController extends Controller
     public function details(Request $request)
     {
         try {
-            $agency = $request->user("agency");
-            $service = Service::with(["facilities"])->where("agency_id", $agency->id)->where("id", $request->service)->firstOrFail();
+            $guide = $request->user("guide");
+
+            $service = Service::with(["facilities"])->where("guide_id", $guide->id)->where("id", $request->service)->firstOrFail();
             $service->facilities->load("icon");
 
             return Response::json([

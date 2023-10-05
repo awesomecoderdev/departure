@@ -51,6 +51,35 @@ class AgencyGuideController extends Controller
         }
     }
 
+
+    /**
+     * Retrieve guide details.
+     */
+    public function details(Request $request)
+    {
+        try {
+            $agency = $request->user('agency');
+            $guide = Guide::where("agency_id", $agency->id)->where("id", $request->guide)->firstOrFail();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully authorized.",
+                'data'      => [
+                    "guide" => $guide
+                ],
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
     /**
      * Crete a newly created guide in database.
      */

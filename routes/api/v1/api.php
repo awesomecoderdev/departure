@@ -128,6 +128,7 @@ Route::group(['prefix' => 'agency', 'as' => 'agency.', 'middleware' => "agency"]
     // guide route
     Route::group(['prefix' => 'guide', 'as' => 'guide.', 'middleware' => ["agency"], "controller" => AgencyGuideController::class], function () {
         Route::get('/', 'guide')->name("guide");
+        Route::get('/details/{guide}', 'details')->name("details");
         Route::post('/register', 'register')->name("register");
         Route::post('/update/{guide}', 'update')->name("update");
         Route::post('/delete/{guide}', 'delete')->name("delete");
