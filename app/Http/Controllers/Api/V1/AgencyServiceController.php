@@ -7,14 +7,15 @@ use Carbon\Carbon;
 use App\Models\Review;
 use App\Models\Booking;
 use App\Models\Service;
+use App\Models\Facility;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use PHPUnit\Event\Code\Throwable;
-use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Controller;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Api\V1\StoreServiceRequest;
@@ -314,11 +315,44 @@ class AgencyServiceController extends Controller
             $service = Service::where("agency_id", $agency->id)->where("id", $request->service)->firstOrFail();
 
             if (!empty($service->image)) {
-                $imagePath = public_path($service->image);
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
+                if (strpos($service->image, "assets/images/service") !== false) {
+                    $path = str_replace(asset("/"), "", $service->image);
+                    $imagePath = public_path($path);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
                 }
             }
+
+            if ($service->thumbnail) {
+                // Check if the folder exists before attempting to delete it
+                $directory = "assets/images/service/thumbnails/$service->id";
+                if (File::exists($directory)) {
+                    // Use the `deleteDirectory` method to recursively delete the folder and its contents
+                    File::deleteDirectory($directory);
+
+                    // Optionally, you can check if the folder was successfully deleted
+                    if (!File::exists($directory)) {
+                        foreach ($service->thumbnail as $key => $thumbnail) {
+                            if (strpos($thumbnail, "assets/images/service/thumbnails") !== false) {
+                                $path = str_replace(asset("/"), "", $thumbnail);
+
+                                $imagePath = public_path($path);
+                                if (file_exists($imagePath)) {
+                                    unlink($imagePath);
+                                }
+                            }
+                        }
+
+                        File::deleteDirectory($directory);
+                    }
+                }
+            }
+
+
+
+            // delete facility
+            Facility::where("service_id", $service->id)->delete();
 
             $service->delete();
 
