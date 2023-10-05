@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\FrontendController;
 use App\Http\Controllers\Api\V1\Auth\GuideController;
 use App\Http\Controllers\Api\V1\AgencyGuideController;
 use App\Http\Controllers\Api\V1\Auth\AgencyController;
+use App\Http\Controllers\Api\v1\GuideServiceController;
 use App\Http\Controllers\Api\V1\AgencyServiceController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\CustomerBookingController;
@@ -100,7 +101,6 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/deactivate', 'deactivate')->name("deactivate");
             Route::post('/logout', 'logout')->name("logout");
 
-
             // bookings route
             Route::get('/booking', [AgencyBookingController::class, "booking"])->name("booking");
         });
@@ -131,6 +131,25 @@ Route::group(['prefix' => 'agency', 'as' => 'agency.', 'middleware' => "agency"]
         Route::post('/register', 'register')->name("register");
         Route::post('/update/{guide}', 'update')->name("update");
         Route::post('/delete/{guide}', 'delete')->name("delete");
+    });
+});
+
+// guide routes
+Route::group(['prefix' => 'guide', 'as' => 'guide.', 'middleware' => "guide"], function () {
+
+    // services route
+    Route::group(['prefix' => 'service', 'as' => 'service'], function () {
+        // service route
+        Route::get('/', [GuideServiceController::class, 'index'])->name("index");
+        Route::get('/details/{service}', [GuideServiceController::class, 'details'])->name("details");
+        Route::post('/register', [GuideServiceController::class, 'register'])->name("register");
+        Route::post('/update/{service}', [GuideServiceController::class, 'update'])->name("update");
+        Route::post('/delete/{service}', [GuideServiceController::class, 'destroy'])->name("delete");
+        Route::post('/thumbnail/delete/{service}', [GuideServiceController::class, 'thumbnail'])->name("thumbnail.delete");
+
+        // Facility routes
+        Route::post('/facilities/register', [ServiceFacilityController::class, 'register'])->name("facilities.register");
+        Route::post('/facilities/delete/{facility}', [ServiceFacilityController::class, 'destroy'])->name("facilities.delete");
     });
 });
 

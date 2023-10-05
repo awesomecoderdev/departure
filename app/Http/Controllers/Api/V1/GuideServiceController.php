@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\v1;
 
 use Exception;
 use Carbon\Carbon;
@@ -21,7 +21,7 @@ use App\Http\Requests\Api\V1\StoreServiceRequest;
 use App\Http\Requests\Api\V1\UpdateServiceRequest;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-class AgencyServiceController extends Controller
+class GuideServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
