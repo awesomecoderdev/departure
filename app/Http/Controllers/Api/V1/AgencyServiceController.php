@@ -131,10 +131,11 @@ class AgencyServiceController extends Controller
 
                 $images = [];
                 foreach ($request->file('thumbnail') as $key => $image) {
+                    $key = md5(time() . rand(1, 1000));
                     $imageName = "thumbnail_{$service->id}_{$key}.png";
                     $imagePath = "assets/images/service/thumbnails/{$service->id}/{$imageName}";
 
-                    if ($key > 4) {
+                    if (count($images) > 4) {
                         break; // skip if images is more then 5
                     }
 
@@ -253,13 +254,12 @@ class AgencyServiceController extends Controller
                 }
 
                 $images = $service?->thumbnail?->toArray() ?? [];
-                $thumbnails = $service?->thumbnail?->count() ?? 0;
                 foreach ($request->file('thumbnail') as $key => $image) {
-                    $key = $key + $thumbnails;
+                    $key = md5(time() . rand(1, 1000));
                     $imageName = "thumbnail_{$service->id}_{$key}.png";
                     $imagePath = "assets/images/service/thumbnails/{$service->id}/{$imageName}";
 
-                    if ($key > 4) {
+                    if (count($images) > 4) {
                         break; // skip if images is more then 5
                     }
 
@@ -348,8 +348,6 @@ class AgencyServiceController extends Controller
                     }
                 }
             }
-
-
 
             // delete facility
             Facility::where("service_id", $service->id)->delete();
