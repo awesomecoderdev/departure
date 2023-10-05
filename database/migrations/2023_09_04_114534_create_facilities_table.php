@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer("icon_id")->default(0);
             $table->integer("service_id")->default(0);
             $table->integer("agency_id")->default(0);
+            $table->integer("guide_id")->default(0);
             $table->string("title")->nullable();
             $table->text("description")->nullable();
             $table->text("metadata")->nullable();
