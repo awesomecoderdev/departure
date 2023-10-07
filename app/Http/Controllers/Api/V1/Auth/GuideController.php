@@ -150,6 +150,7 @@ class GuideController extends Controller
             $guide->category_id = $request->category_id;
             $guide->first_name = $request->first_name;
             $guide->last_name = $request->last_name;
+            $guide->username = $request->username;
             $guide->phone = $request->phone;
             $guide->email = $request->email;
             $guide->password = Hash::make($request->password);

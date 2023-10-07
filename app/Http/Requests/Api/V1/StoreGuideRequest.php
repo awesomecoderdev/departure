@@ -30,6 +30,7 @@ class StoreGuideRequest extends FormRequest
             "agency_id"             => "nullable|integer|exists:agencies,id",
             "first_name"            => "required|string|min:3|max:20",
             "last_name"             => "required|string|min:3|max:20",
+            "username"              => "required|string|min:3|max:20|unique:guides,username",
             "email"                 => "required|email|string|unique:guides,email",
             "password"              => "required|required|min:5|max:10",
             "phone"                 => "required|string|unique:guides,phone",
