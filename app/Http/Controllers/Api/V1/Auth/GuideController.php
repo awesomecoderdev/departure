@@ -147,6 +147,7 @@ class GuideController extends Controller
             $ttl = 1; // 1 min lock for otp
             $guide = new Guide();
 
+            $guide->category_id = $request->category_id;
             $guide->first_name = $request->first_name;
             $guide->last_name = $request->last_name;
             $guide->phone = $request->phone;

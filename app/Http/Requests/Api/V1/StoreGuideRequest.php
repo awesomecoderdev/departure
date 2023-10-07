@@ -26,6 +26,7 @@ class StoreGuideRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'category_id' => 'required|exists:categories,id',
             "agency_id"             => "nullable|integer|exists:agencies,id",
             "first_name"            => "required|string|min:3|max:20",
             "last_name"             => "required|string|min:3|max:20",
