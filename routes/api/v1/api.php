@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\V1\AgencyBookingController;
 use App\Http\Controllers\Api\V1\AgencyServiceController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
 use App\Http\Controllers\Api\V1\CustomerBookingController;
-use App\Http\Controllers\Api\v1\GuideServiceFacilityController;
+use App\Http\Controllers\Api\V1\GuideServiceFacilityController;
 use App\Http\Controllers\Api\V1\AgencyServiceFacilityController;
 
 /*
