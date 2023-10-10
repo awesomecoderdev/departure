@@ -40,8 +40,8 @@ class ServiceController extends Controller
         }
 
         try {
-            $params = Arr::only($request->input(), ["category_id", "zone_id"]);
-            $services = Service::with(["facilities"])->when($category, function ($query) use ($category) {
+            $params = Arr::only($request->input(), ["category_id"]);
+            $services = Service::with(["facilities.icon"])->when($category, function ($query) use ($category) {
                 return $query->where('category_id', $category);
             })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
             return Response::json([
