@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
+            $table->integer("customer_id")->default(0);
+            $table->integer("service_id")->default(0);
+            $table->integer("guide_id")->default(0);
+            $table->integer("rating")->default(0);
+            $table->text("comment")->nullable();
             $table->timestamps();
         });
     }

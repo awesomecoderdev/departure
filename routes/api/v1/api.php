@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\Auth\GuideController;
 use App\Http\Controllers\Api\V1\AgencyGuideController;
 use App\Http\Controllers\Api\V1\Auth\AgencyController;
 use App\Http\Controllers\Api\V1\GuideServiceController;
+use App\Http\Controllers\Api\V1\CustomerGuideController;
 use App\Http\Controllers\Api\V1\AgencyBookingController;
 use App\Http\Controllers\Api\V1\AgencyServiceController;
 use App\Http\Controllers\Api\V1\Auth\CustomerController;
@@ -65,6 +66,10 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             Route::post('/booking/update', [CustomerBookingController::class, "change"])->name("booking.change");
             Route::get('/booking/details/{booking}', [CustomerBookingController::class, "details"])->name("booking.details");
             Route::get('/booking/calculate', [CustomerBookingController::class, "calculate"])->name("booking.calculate");
+
+            // guide route
+            Route::get('/guide', [CustomerGuideController::class, "guide"])->name("guide");
+            Route::get('/guide/top', [CustomerGuideController::class, "top"])->name("booking.top");
         });
     });
 

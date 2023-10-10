@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Review;
 use DateTimeInterface;
+use App\Models\Package;
+use App\Models\Service;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\NewAccessToken;
@@ -79,6 +82,26 @@ class Guide extends Authenticatable
     public function agency() //: HasMany
     {
         return $this->belongsTo(Agency::class);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Service
+     */
+    public function service() //: HasMany
+    {
+        return $this->hasMany(Service::class)->whereNot("guide_id", 0);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return  \App\Models\Review
+     */
+    public function review() //: HasMany
+    {
+        return $this->hasMany(Review::class)->whereNot("guide_id", 0);
     }
 
     /**
