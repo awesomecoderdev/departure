@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Response as HTTP;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Guid\Guid;
 
 class CustomerGuideController extends Controller
 {
@@ -71,6 +72,39 @@ class CustomerGuideController extends Controller
                 'message'   => "Successfully authorized.",
                 'data'   => [
                     "guides" => $guides,
+                ]
+            ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
+        } catch (\Exception $e) {
+            throw $e;
+            return Response::json([
+                'success'   => false,
+                'status'    => HTTP::HTTP_FORBIDDEN,
+                'message'   => "Something went wrong.",
+                // 'err' => $e->getMessage(),
+            ],  HTTP::HTTP_FORBIDDEN); // HTTP::HTTP_OK
+        }
+    }
+
+    /**
+     * Retrieve top rated guide info.
+     */
+    public function details(Request $request)
+    {
+        try {
+            // Get the user's id from token header and get his provider guides
+            $customer = $request->user("customer");
+
+            $guide = Guide::with([
+                "service",
+                "review",
+            ])->where("id", $request->guide)->where("status", true)->get();
+
+            return Response::json([
+                'success'   => true,
+                'status'    => HTTP::HTTP_OK,
+                'message'   => "Successfully authorized.",
+                'data'   => [
+                    "guide" => $guide,
                 ]
             ],  HTTP::HTTP_OK); // HTTP::HTTP_OK
         } catch (\Exception $e) {

@@ -70,6 +70,7 @@ Route::group(['prefix' => 'auth', "middleware" => "guest"], function () {
             // guide route
             Route::get('/guide', [CustomerGuideController::class, "guide"])->name("guide");
             Route::get('/guide/top', [CustomerGuideController::class, "top"])->name("booking.top");
+            Route::get('/guide/details/{guide}', [CustomerGuideController::class, "details"])->name("guide.details");
         });
     });
 
