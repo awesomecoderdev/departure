@@ -27,7 +27,7 @@ class CustomerGuideController extends Controller
 
             // status
             $params = Arr::only($request->input(), ["per_page"]);
-            $guides = Guide::with([
+            $guides = Guide::withCount([
                 "service",
                 "review",
             ])->where("status", true)->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
@@ -60,7 +60,7 @@ class CustomerGuideController extends Controller
             // Get the user's id from token header and get his provider guides
             $customer = $request->user("customer");
 
-            $guides = Guide::with([
+            $guides = Guide::withCount([
                 "service",
                 "review",
             ])->where("status", true)->orderBy("rating_count", "DESC")->limit(10)->get();
