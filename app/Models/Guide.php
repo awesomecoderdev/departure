@@ -117,7 +117,6 @@ class Guide extends Authenticatable
         );
     }
 
-
     /**
      * Interact with the user's image.
      *

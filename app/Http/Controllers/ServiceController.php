@@ -41,7 +41,7 @@ class ServiceController extends Controller
 
         try {
             $params = Arr::only($request->input(), ["category_id"]);
-            $services = Service::with(["facilities.icon"])->when($category, function ($query) use ($category) {
+            $services = Service::with(["facilities.icon", "category", "review"])->when($category, function ($query) use ($category) {
                 return $query->where('category_id', $category);
             })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
             return Response::json([
@@ -166,7 +166,7 @@ class ServiceController extends Controller
         try {
 
             // $service->load(["provider", "reviews"]);
-            $service->load(["facilities.icon"]);
+            $service->load(["facilities.icon", "category", "review"]);
             return Response::json([
                 'success'   => true,
                 'status'    => HTTP::HTTP_OK,
@@ -326,8 +326,8 @@ class ServiceController extends Controller
         }
 
         try {
-            $params = Arr::only($request->input(), ["category_id", "zone_id"]);
-            $services = Service::with(["facilities.icon"])->when($category, function ($query) use ($category) {
+            $params = Arr::only($request->input(), ["category_id"]);
+            $services = Service::with(["facilities.icon", "category", "review"])->when($category, function ($query) use ($category) {
                 return $query->where('category_id', $category);
             })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
             return Response::json([
@@ -372,7 +372,7 @@ class ServiceController extends Controller
 
         try {
             $params = Arr::only($request->input(), ["category_id", "zone_id"]);
-            $services = Service::with(["facilities.icon"])->when($category, function ($query) use ($category) {
+            $services = Service::with(["facilities.icon", "category", "review"])->when($category, function ($query) use ($category) {
                 return $query->where('category_id', $category);
             })->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
             return Response::json([
@@ -419,7 +419,7 @@ class ServiceController extends Controller
 
         try {
             $params = Arr::only($request->input(), ["category_id", "query"]);
-            $services = Service::with(["facilities.icon"])->when($category, function ($query) use ($category) {
+            $services = Service::with(["facilities.icon", "category", "review"])->when($category, function ($query) use ($category) {
                 return $query->where('category_id', $category);
             })->when($search, function ($query) use ($search) {
                 return $query->where('name', 'like', "%{$search}%")

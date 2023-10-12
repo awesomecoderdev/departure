@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string("image")->nullable();
             $table->text("metadata")->nullable();
             $table->integer("booking_count")->default(0);
+            $table->integer("rating_count")->default(0);
+            $table->double("avg_rating", 11, 2)->default(0.00);
             $table->boolean("status")->default(true);
             $table->timestamps();
         });

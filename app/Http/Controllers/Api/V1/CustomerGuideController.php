@@ -32,7 +32,9 @@ class CustomerGuideController extends Controller
                 "service",
                 "review",
             ])->with([
-                "service",
+                "service.category",
+                "service.review",
+                "service.facilities.icon",
                 "review",
             ])->where("status", true)->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
@@ -68,7 +70,9 @@ class CustomerGuideController extends Controller
                 "service",
                 "review",
             ])->with([
-                "service",
+                "service.category",
+                "service.review",
+                "service.facilities.icon",
                 "review",
             ])->where("status", true)->where("rating_count", ">", 100)->orderBy("rating_count", "DESC")->limit(10)->get();
 
@@ -101,7 +105,9 @@ class CustomerGuideController extends Controller
             $customer = $request->user("customer");
 
             $guide = Guide::with([
-                "service",
+                "service.category",
+                "service.review",
+                "service.facilities.icon",
                 "review",
             ])->where("id", $request->guide)->where("status", true)->firstOrFail();
 
