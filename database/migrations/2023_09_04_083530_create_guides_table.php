@@ -31,6 +31,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string("firebase_token")->nullable();
             $table->integer("rating_count")->default(0);
+            $table->double("avg_rating", 11, 2)->default(0.00);
             $table->boolean("status")->default(true);
             $table->timestamps();
         });

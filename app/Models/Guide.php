@@ -117,6 +117,22 @@ class Guide extends Authenticatable
         );
     }
 
+
+    /**
+     * Interact with the user's image.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function avgRating(): Attribute
+    {
+        $ratings = $this->review()->pluck("rating")->toArray();
+        $avgRating = collect($ratings)->average();
+        return Attribute::make(
+            get: fn ($value) => number_format(($avgRating ?? $value), 2),
+            set: fn ($value) => number_format(($avgRating ?? $value), 2),
+        );
+    }
+
     /**
      * Create a new personal access token for the user.
      *

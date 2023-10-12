@@ -31,6 +31,9 @@ class CustomerGuideController extends Controller
             $guides = Guide::withCount([
                 "service",
                 "review",
+            ])->with([
+                "service",
+                "review",
             ])->where("status", true)->orderBy("id", "DESC")->paginate($request->input("per_page", 10))->onEachSide(-1)->appends($params);
 
             return Response::json([
@@ -62,6 +65,9 @@ class CustomerGuideController extends Controller
             $customer = $request->user("customer");
 
             $guides = Guide::withCount([
+                "service",
+                "review",
+            ])->with([
                 "service",
                 "review",
             ])->where("status", true)->where("rating_count", ">", 100)->orderBy("rating_count", "DESC")->limit(10)->get();
