@@ -103,7 +103,7 @@ class CustomerGuideController extends Controller
             $guide = Guide::with([
                 "service",
                 "review",
-            ])->where("id", $request->guide)->where("status", true)->get();
+            ])->where("id", $request->guide)->where("status", true)->firstOrFail();
 
             return Response::json([
                 'success'   => true,
