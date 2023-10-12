@@ -64,7 +64,7 @@ class CustomerGuideController extends Controller
             $guides = Guide::withCount([
                 "service",
                 "review",
-            ])->where("status", true)->orderBy("rating_count", "DESC")->limit(10)->get();
+            ])->where("status", true)->where("rating_count", ">", 100)->orderBy("rating_count", "DESC")->limit(10)->get();
 
             return Response::json([
                 'success'   => true,
